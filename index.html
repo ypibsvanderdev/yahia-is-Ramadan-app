@@ -1,0 +1,3050 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ramadan Companion 🌙</title>
+
+    <!-- PWA / Mobile Setup -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ramadan">
+    <meta name="theme-color" content="#0a0a1a">
+    <meta name="description" content="Your daily Ramadan spiritual guide with prayer times, Quran, and Duas.">
+
+    <!-- App Icons -->
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #e94560;
+            --gold: #ffd700;
+            --gold-light: #ffed4a;
+            --text: #ffffff;
+            --text-muted: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, #0f0f23 100%);
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Animated stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Moon decoration */
+        .moon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.5), 0 0 100px rgba(255, 215, 0, 0.3);
+            z-index: 1;
+            animation: moonGlow 3s infinite ease-in-out;
+        }
+
+        .moon::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 15px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        @keyframes moonGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 60px rgba(255, 215, 0, 0.5), 0 0 100px rgba(255, 215, 0, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 80px rgba(255, 215, 0, 0.7), 0 0 120px rgba(255, 215, 0, 0.4);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .lang-switch {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 100;
+            display: flex;
+            gap: 8px;
+        }
+
+        .lang-btn {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.8rem;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .lang-btn.active {
+            background: var(--gold);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* RTL Styles */
+        [dir="rtl"] {
+            font-family: 'Amiri', 'Outfit', sans-serif;
+        }
+
+        [dir="rtl"] .lang-switch {
+            left: auto;
+            right: 20px;
+        }
+
+        [dir="rtl"] .moon {
+            right: auto;
+            left: 20px;
+        }
+
+        [dir="rtl"] .dua-header,
+        [dir="rtl"] .notification-header,
+        [dir="rtl"] .prayer-header,
+        [dir="rtl"] .quran-header,
+        [dir="rtl"] .notes-header {
+            flex-direction: row-reverse;
+        }
+
+        [dir="rtl"] .prayer-name,
+        [dir="rtl"] .note-content {
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+
+        [dir="rtl"] .speak-btn,
+        [dir="rtl"] .fullscreen-btn {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        [dir="rtl"] .arabic-text,
+        [dir="rtl"] .ayah-arabic,
+        [dir="rtl"] .adhkar-arabic {
+            text-align: center;
+        }
+
+        [dir="rtl"] .transliteration,
+        [dir="rtl"] .adhkar-transliteration {
+            border-left: none;
+            border-right: 3px solid var(--accent);
+            text-align: right;
+        }
+
+        [dir="rtl"] .english-text,
+        [dir="rtl"] .ayah-translation,
+        [dir="rtl"] .adhkar-meaning,
+        [dir="rtl"] .subtitle {
+            text-align: right;
+        }
+
+        [dir="rtl"] .nav-buttons {
+            flex-direction: row-reverse;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        /* Main Navigation Tab */
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            animation: fadeIn 0.8s ease-out;
+            flex-wrap: wrap;
+            padding: 0 10px;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: var(--gold) !important;
+            color: var(--primary) !important;
+            border-color: var(--gold);
+        }
+
+        [dir="rtl"] .nav-tab {
+            flex-direction: row-reverse;
+        }
+
+        /* Day Counter Card */
+        .day-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(233, 69, 96, 0.1) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .day-label {
+            font-size: 1rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .day-number {
+            font-size: 5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .day-of-30 {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .not-ramadan {
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        .countdown {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            margin: 10px 0;
+        }
+
+        /* Dua Card */
+        .dua-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .dua-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .dua-title {
+            font-size: 1.2rem;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .speak-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, #ff6b6b 100%);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        .speak-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(233, 69, 96, 0.6);
+        }
+
+        .speak-btn:active {
+            transform: scale(0.95);
+        }
+
+        .speak-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 2rem;
+            text-align: right;
+            direction: rtl;
+            color: var(--gold-light);
+            line-height: 1.8;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 16px;
+        }
+
+        .transliteration {
+            font-size: 1.1rem;
+            color: var(--text);
+            font-style: italic;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .english-text {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            animation: slideUp 1s ease-out;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            border-radius: 16px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            margin-bottom: 25px;
+            animation: slideUp 0.7s ease-out;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--accent) 100%);
+            border-radius: 10px;
+            transition: width 1s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            header {
+                padding-top: 70px;
+                /* Space for lang switch */
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-top: 10px;
+            }
+
+            .arabic-text {
+                font-size: 1.5rem;
+            }
+
+            .moon {
+                width: 40px;
+                height: 40px;
+                top: 10px;
+                right: 10px;
+            }
+
+            .moon::before {
+                width: 32px;
+                height: 32px;
+                top: 2px;
+                left: 8px;
+            }
+
+            .prayer-header,
+            .notes-header,
+            .dua-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .detect-location-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .method-selector {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .method-selector select {
+                width: 100%;
+            }
+        }
+
+        /* Speaking animation */
+        .speaking {
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        /* Notification Card */
+        .notification-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.9s ease-out;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .notif-enabled {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* Recipes View Styles */
+        #recipesView {
+            animation: fadeIn 0.5s ease-out;
+            padding-bottom: 50px;
+        }
+
+        .recipe-category {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .recipe-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--gold);
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .recipe-name {
+            font-size: 1.25rem;
+            color: var(--gold-light);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .recipe-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        [dir="rtl"] .recipe-card {
+            border-left: none;
+            border-right: 4px solid var(--gold);
+            text-align: right;
+        }
+
+        [dir="rtl"] .category-title {
+            flex-direction: row-reverse;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.2);
+            transition: 0.3s;
+            border-radius: 32px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked+.toggle-slider {
+            background: linear-gradient(135deg, var(--gold) 0%, #ffb700 100%);
+        }
+
+        .toggle-switch input:checked+.toggle-slider:before {
+            transform: translateX(28px);
+        }
+
+        .notification-settings {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .notification-settings.active {
+            display: block;
+        }
+
+        .time-picker-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .time-picker-label {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .time-picker {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 10px 15px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .time-picker:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .save-time-btn {
+            background: linear-gradient(135deg, var(--gold) 0%, #ffb700 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            color: #1a1a2e;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-time-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .notification-status {
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .notification-status.success {
+            color: #4ade80;
+        }
+
+        /* Prayer Times Card */
+        .prayer-card {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(33, 150, 243, 0.1) 100%);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            animation: slideUp 1s ease-out;
+        }
+
+        .prayer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .method-selector {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 10px;
+        }
+
+        .method-selector label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .method-selector select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            flex: 1;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .method-selector select:focus {
+            border-color: var(--gold);
+        }
+
+        .asr-note {
+            font-size: 0.75rem;
+            color: var(--accent);
+            padding: 0 10px;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .prayer-title {
+            font-size: 1.2rem;
+            color: #4ade80;
+            font-weight: 600;
+        }
+
+        .prayer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .prayer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .prayer-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .prayer-item.active {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+
+        .prayer-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .prayer-icon {
+            font-size: 1.2rem;
+        }
+
+        .prayer-time-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            width: 100px;
+            text-align: center;
+        }
+
+        .prayer-time-input:focus {
+            outline: none;
+            border-color: #4ade80;
+        }
+
+        .prayer-time-display {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .next-prayer-banner {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.3) 0%, rgba(33, 150, 243, 0.2) 100%);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .next-prayer-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .next-prayer-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #4ade80;
+        }
+
+        .next-prayer-countdown {
+            font-size: 1rem;
+            color: var(--gold);
+            margin-top: 5px;
+        }
+
+        .save-prayers-btn {
+            width: 100%;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: #1a1a2e;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-prayers-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+        }
+
+        /* Quran Ayahs Card */
+        .quran-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .quran-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .quran-title {
+            font-size: 1.2rem;
+            color: #a78bfa;
+            font-weight: 600;
+        }
+
+        .ayah-container {
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .ayah-arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            text-align: right;
+            direction: rtl;
+            color: #e0d4ff;
+            line-height: 2;
+            margin-bottom: 15px;
+        }
+
+        .ayah-translation {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .ayah-reference {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #a78bfa;
+        }
+
+        .ayah-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .ayah-nav-btn {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ayah-nav-btn:hover {
+            background: rgba(139, 92, 246, 0.4);
+        }
+
+        /* Adhkar Cards */
+        .adhkar-section {
+            margin-bottom: 25px;
+        }
+
+        .adhkar-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .adhkar-card.morning {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .adhkar-card.evening {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(79, 70, 229, 0.1) 100%);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .adhkar-card.afternoon {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(219, 39, 119, 0.1) 100%);
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+
+        .adhkar-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .adhkar-icon {
+            font-size: 1.5rem;
+        }
+
+        .adhkar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .adhkar-title.morning {
+            color: #fbbf24;
+        }
+
+        .adhkar-title.evening {
+            color: #818cf8;
+        }
+
+        .adhkar-title.afternoon {
+            color: #f472b6;
+        }
+
+        .adhkar-arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            text-align: right;
+            direction: rtl;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .adhkar-transliteration {
+            font-size: 0.95rem;
+            color: var(--text);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .adhkar-meaning {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Notes & Reminders Card */
+        .notes-card {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.15) 0%, rgba(26, 26, 46, 0.1) 100%);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            animation: slideUp 1.1s ease-out;
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .notes-title {
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .note-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+        }
+
+        .note-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px 15px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+        }
+
+        .note-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .note-time-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .note-time-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 10px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .add-note-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, #ff6b6b 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-note-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .note-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border-left: 4px solid var(--accent);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .note-content {
+            flex: 1;
+        }
+
+        .note-text {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .note-time-tag {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .delete-note-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            padding: 8px;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .delete-note-btn:hover {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Full Screen Overlay */
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 25, 0.98);
+            z-index: 2000;
+            padding: 40px 20px;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+            justify-content: center;
+            align-items: center;
+            animation: fadeInOverlay 0.3s ease-out;
+        }
+
+        @keyframes fadeInOverlay {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fullscreen-overlay.active {
+            display: flex;
+        }
+
+        .fullscreen-content {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 40px;
+            padding: 60px 40px;
+            position: relative;
+            box-shadow: 0 0 100px rgba(255, 215, 0, 0.1);
+            text-align: center;
+        }
+
+        .close-fullscreen {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .close-fullscreen:hover {
+            background: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .fullscreen-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.1);
+        }
+
+        .fullscreen-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+
+        /* Large text for fullscreen */
+        .fullscreen-content .arabic-text,
+        .fullscreen-content .ayah-arabic,
+        .fullscreen-content .adhkar-arabic {
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.8;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--gold-light);
+            font-family: 'Amiri', serif;
+        }
+
+        .fullscreen-content .transliteration,
+        .fullscreen-content .adhkar-transliteration,
+        .fullscreen-content .ayah-translation {
+            font-size: clamp(1.1rem, 3vw, 1.8rem);
+            text-align: center;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .fullscreen-content .english-text,
+        .fullscreen-content .adhkar-meaning {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .fullscreen-content .dua-title,
+        .fullscreen-content .quran-title,
+        .fullscreen-content .adhkar-title {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 40px;
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .fullscreen-content {
+                padding: 40px 20px;
+                border-radius: 24px;
+            }
+        }
+
+        /* Sadaqah Planner */
+        .sadaqah-card {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.15) 0%, rgba(26, 26, 46, 0.4) 100%);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            animation: slideUp 1.1s ease-out;
+        }
+
+        .sadaqah-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .sadaqah-title {
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .sadaqah-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .sadaqah-input {
+            flex: 1;
+            min-width: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 10px 15px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+        }
+
+        .sadaqah-suggest-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .sadaqah-suggest-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        .sadaqah-plan {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px dashed rgba(233, 69, 96, 0.2);
+            margin-top: 10px;
+            display: none;
+        }
+
+        .sadaqah-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .sadaqah-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .sadaqah-bullet {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="moon"></div>
+
+    <div class="lang-switch">
+        <button onclick="setLanguage('en')" id="enBtn" class="lang-btn active">English</button>
+        <button onclick="setLanguage('ar')" id="arBtn" class="lang-btn">العربية</button>
+    </div>
+
+    <div id="fullscreenOverlay" class="fullscreen-overlay" onclick="handleOverlayClick(event)">
+        <button class="close-fullscreen" onclick="closeFullScreen()">&times;</button>
+        <div id="fullscreenContent" class="fullscreen-content"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 id="mainTitle">🌙 Ramadan Companion</h1>
+            <p class="subtitle" id="mainSubtitle">Your daily spiritual guide</p>
+        </header>
+
+        <nav class="main-nav">
+            <a href="index.html" class="nav-tab active" id="homeTab">🏠 Home</a>
+            <a href="quran.html" class="nav-tab" id="quranTab">📖 Full Quran</a>
+            <a href="recipes.html" class="nav-tab" id="recipesTab">🍳 Recipes</a>
+        </nav>
+
+        <div id="homeView">
+
+            <div class="day-card" id="dayCard">
+                <!-- Filled by JavaScript -->
+            </div>
+
+            <div class="progress-container" id="progressContainer">
+                <!-- Filled by JavaScript -->
+            </div>
+
+            <div class="dua-card" id="duaCard">
+                <!-- Filled by JavaScript -->
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prevBtn" onclick="changeDay(-1)">← Previous Day</button>
+                <button class="nav-btn" id="todayBtn" onclick="goToToday()">📅 Today</button>
+                <button class="nav-btn" id="nextBtn" onclick="changeDay(1)">Next Day →</button>
+            </div>
+
+            <!-- Notification Settings -->
+            <div class="notification-card">
+                <div class="notification-header">
+                    <span class="notification-title" id="notifTitle">🔔 Daily Reminders</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="notificationToggle" onchange="toggleNotifications()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="notification-settings" id="notificationSettings">
+                    <div class="time-picker-group">
+                        <span class="time-picker-label" id="remindAtLabel">Remind me at:</span>
+                        <input type="time" class="time-picker" id="reminderTime" value="05:00">
+                        <button class="save-time-btn" onclick="saveReminderTime()" id="saveNotifBtn">Save</button>
+                    </div>
+                    <p class="notification-status" id="notificationStatus"></p>
+                </div>
+            </div>
+
+            <div class="prayer-card">
+                <div class="prayer-header">
+                    <span class="prayer-title" id="prayerTimesTitle">🕌 Prayer Times</span>
+                    <button class="detect-location-btn" onclick="detectLocation()" id="detectLocBtn"
+                        title="Detect Location">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span id="detectLocText">Detect Location</span>
+                    </button>
+                </div>
+
+                <div class="method-selector">
+                    <label for="calcMethod" id="methodLabel">Calculation Method:</label>
+                    <select id="calcMethod" onchange="detectLocation()">
+                        <option value="2">ISNA (North America)</option>
+                        <option value="3">Muslim World League</option>
+                        <option value="4">Umm Al-Qura (Makkah)</option>
+                        <option value="5">Egyptian Authority</option>
+                        <option value="1">University of Karachi</option>
+                        <option value="0">Shia Ithna-Ashari</option>
+                        <option value="7">Tehran (Geophysics)</option>
+                        <option value="8">Gulf Region</option>
+                        <option value="9">Kuwait</option>
+                        <option value="10">Qatar</option>
+                        <option value="11">Singapore (MUIS)</option>
+                        <option value="12">France (UOIF)</option>
+                        <option value="13">Turkey (Diyanet)</option>
+                        <option value="14">Russia</option>
+                        <option value="15">Moonsighting Committee</option>
+                        <option value="16">Dubai (UAE)</option>
+                        <option value="17">Malaysia (JAKIM)</option>
+                        <option value="18">Tunisia</option>
+                        <option value="19">Algeria</option>
+                        <option value="20">Indonesia (KEMENAG)</option>
+                        <option value="21">Morocco</option>
+                        <option value="22">Brazil</option>
+                    </select>
+                </div>
+
+                <div class="method-selector">
+                    <label for="asrMadhab" id="madhabLabel">Asr Method (Madhab):</label>
+                    <select id="asrMadhab" onchange="detectLocation()">
+                        <option value="0">Standard (Shafi'i, Maliki, Hanbali)</option>
+                        <option value="1">Hanafi (Recommended for US/Canada)</option>
+                    </select>
+                </div>
+
+
+
+                <div id="locationStatus" class="location-status"></div>
+
+                <div class="prayer-list">
+                    <div class="prayer-item" id="fajrItem">
+                        <span class="prayer-name">
+                            <span class="prayer-icon">🌅</span>
+                            <span id="fajrName">Fajr</span>
+                        </span>
+                        <input type="time" class="prayer-time-input" id="fajrTime" value="05:30"
+                            onchange="savePrayerTimes()">
+                    </div>
+
+                    <div class="prayer-item" id="dhuhrItem">
+                        <span class="prayer-name">
+                            <span class="prayer-icon">☀️</span>
+                            <span id="dhuhrName">Dhuhr</span>
+                        </span>
+                        <input type="time" class="prayer-time-input" id="dhuhrTime" value="12:30"
+                            onchange="savePrayerTimes()">
+                    </div>
+
+                    <div class="prayer-item" id="asrItem">
+                        <span class="prayer-name">
+                            <span class="prayer-icon">🌤️</span>
+                            <span id="asrName">Asr</span>
+                        </span>
+                        <input type="time" class="prayer-time-input" id="asrTime" value="15:45"
+                            onchange="savePrayerTimes()">
+                    </div>
+
+                    <div class="prayer-item" id="maghribItem">
+                        <span class="prayer-name">
+                            <span class="prayer-icon">🌅</span>
+                            <span id="maghribName">Maghrib</span>
+                        </span>
+                        <input type="time" class="prayer-time-input" id="maghribTime" value="18:15"
+                            onchange="savePrayerTimes()">
+                    </div>
+
+                    <div class="prayer-item" id="ishaItem">
+                        <span class="prayer-name">
+                            <span class="prayer-icon">🌙</span>
+                            <span id="ishaName">Isha</span>
+                        </span>
+                        <input type="time" class="prayer-time-input" id="ishaTime" value="19:45"
+                            onchange="savePrayerTimes()">
+                    </div>
+                </div>
+
+                <!-- Next Prayer Banner -->
+                <div class="next-prayer-banner" id="nextPrayerBanner">
+                    <div class="next-prayer-label" id="nextPrayerLabel">Next Prayer</div>
+                    <div class="next-prayer-name" id="nextPrayerName">Fajr</div>
+                    <div class="next-prayer-countdown" id="nextPrayerCountdown">in 2h 30m</div>
+                </div>
+
+                <button class="save-prayers-btn" onclick="savePrayerTimes()" id="savePrayersBtn">💾 Save Prayer
+                    Times</button>
+            </div>
+
+            <!-- Notes & Reminders -->
+            <div class="notes-card">
+                <div class="notes-header">
+                    <span class="notes-title" id="notesTitle">📝 Personal Notes & Reminders</span>
+                </div>
+
+                <div class="note-input-group">
+                    <input type="text" id="noteTextInput" class="note-input"
+                        placeholder="Enter your note (e.g., Read Surah Kahf)">
+                    <div class="note-time-group">
+                        <input type="time" id="noteTimeInput" class="note-time-input">
+                        <button class="add-note-btn" onclick="addNote()" id="addNoteBtn">Add Note</button>
+                    </div>
+                </div>
+
+                <div class="notes-list" id="notesList">
+                    <!-- Notes will be added here via JavaScript -->
+                </div>
+            </div>
+
+
+            <!-- Daily Quran Ayahs -->
+            <div class="quran-card">
+                <div class="quran-header">
+                    <span class="quran-title" id="quranTitle">📖 Daily Quran Ayahs</span>
+                    <button class="fullscreen-btn" onclick="openFullScreen('ayah')" title="Full Screen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="ayah-container" id="ayahContainer">
+                    <div class="ayah-arabic" id="ayahArabic"></div>
+                    <div class="ayah-translation" id="ayahTranslation"></div>
+                    <div class="ayah-reference" id="ayahReference"></div>
+                </div>
+                <div class="ayah-nav">
+                    <button class="ayah-nav-btn" onclick="prevAyah()" id="prevAyahBtn">← Previous</button>
+                    <button class="ayah-nav-btn" onclick="nextAyah()" id="nextAyahBtn">Next →</button>
+                </div>
+            </div>
+
+            <!-- Morning/Evening/Afternoon Adhkar -->
+            <div class="adhkar-section">
+                <!-- Morning Dua -->
+                <div class="adhkar-card morning" id="morningCard">
+                    <div class="adhkar-header">
+                        <span class="adhkar-icon">🌅</span>
+                        <span class="adhkar-title morning">Morning Dua (Adhkar As-Sabah)</span>
+                        <button class="fullscreen-btn" onclick="openFullScreen('adhkar', 'morningCard')"
+                            title="Full Screen" style="margin-left: auto;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="adhkar-arabic">أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا
+                        إِلَٰهَ
+                        إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ</div>
+                    <div class="adhkar-transliteration">Asbahna wa asbahal mulku lillah, walhamdu lillah, la ilaha
+                        illallahu
+                        wahdahu la sharika lah</div>
+                    <div class="adhkar-meaning">We have entered the morning and the kingdom belongs to Allah. Praise is
+                        to
+                        Allah. None has the right to be worshipped except Allah alone, with no partner.</div>
+                </div>
+
+                <!-- Afternoon Dua -->
+                <div class="adhkar-card afternoon" id="afternoonCard">
+                    <div class="adhkar-header">
+                        <span class="adhkar-icon">☀️</span>
+                        <span class="adhkar-title afternoon">Afternoon Dua</span>
+                        <button class="fullscreen-btn" onclick="openFullScreen('adhkar', 'afternoonCard')"
+                            title="Full Screen" style="margin-left: auto;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="adhkar-arabic">اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا،
+                        وَعَمَلًا
+                        مُتَقَبَّلًا</div>
+                    <div class="adhkar-transliteration">Allahumma inni as'aluka 'ilman nafi'an, wa rizqan tayyiban, wa
+                        'amalan mutaqabbalan</div>
+                    <div class="adhkar-meaning">O Allah, I ask You for beneficial knowledge, good provision, and
+                        accepted
+                        deeds.</div>
+                </div>
+
+                <!-- Evening Dua -->
+                <div class="adhkar-card evening" id="eveningCard">
+                    <div class="adhkar-header">
+                        <span class="adhkar-icon">🌙</span>
+                        <span class="adhkar-title evening">Evening Dua (Adhkar Al-Masa)</span>
+                        <button class="fullscreen-btn" onclick="openFullScreen('adhkar', 'eveningCard')"
+                            title="Full Screen" style="margin-left: auto;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="adhkar-arabic">أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ
+                        إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ</div>
+                    <div class="adhkar-transliteration">Amsayna wa amsal mulku lillah, walhamdu lillah, la ilaha
+                        illallahu
+                        wahdahu la sharika lah</div>
+                    <div class="adhkar-meaning">We have entered the evening and the kingdom belongs to Allah. Praise is
+                        to
+                        Allah. None has the right to be worshipped except Allah alone, with no partner.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sadaqah-card">
+            <div class="sadaqah-header">
+                <span class="sadaqah-icon" style="font-size: 1.5rem;">💝</span>
+                <span class="sadaqah-title" id="sadaqahTitle">Sadaqah Planner</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;" id="sadaqahSubtitle">Enter your
+                age
+                to get personalized charity ideas for today.</p>
+            <div class="sadaqah-input-group">
+                <input type="number" id="userAge" class="sadaqah-input" placeholder="Your Age" min="1" max="120">
+                <button class="sadaqah-suggest-btn" id="sadaqahBtn" onclick="generateSadaqahPlan()">Get
+                    Recommendations</button>
+            </div>
+            <div id="sadaqahPlan" class="sadaqah-plan"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p id="footerMubarak">Ramadan Mubarak! 🤲</p>
+        <p style="margin-top: 8px; font-size: 0.8rem;" id="footerMadeWith">Made with ❤️ for you</p>
+    </footer>
+    </div>
+
+    <script>
+        // Ramadan 2026 starts approximately February 17, 2026
+        const RAMADAN_START_2026 = new Date('2026-02-17');
+        const RAMADAN_START_2027 = new Date('2027-02-06');
+
+        const TRANSLATIONS = {
+            en: {
+                mainTitle: "🌙 Ramadan Companion",
+                mainSubtitle: "Your daily spiritual guide",
+                dayLabel: "Day of Ramadan",
+                dayOf30: "of 30 days",
+                notRamadan: "Ramadan begins in",
+                browseDuas: "Browse the duas below ⬇️",
+                days: "days",
+                progress: "Ramadan Progress",
+                duaForDay: "Dua for Day",
+                prevDay: "← Previous Day",
+                today: "📅 Today",
+                nextDay: "Next Day →",
+                notifTitle: "🔔 Daily Reminders",
+                remindAt: "Remind me at:",
+                save: "Save",
+                prayerTimes: "🕌 Prayer Times",
+                nextPrayer: "Next Prayer",
+                savePrayers: "💾 Save Prayer Times",
+                notes: "📝 Personal Notes & Reminders",
+                notePlaceholder: "Enter your note (e.g., Read Surah Kahf)",
+                addNote: "Add Note",
+                quran: "📖 Daily Quran Ayahs",
+                fullQuran: "📖 Full Quran",
+                home: "🏠 Home",
+                prev: "← Previous",
+                next: "Next →",
+                footerMubarak: "Ramadan Mubarak! 🤲",
+                footerMadeWith: "Made with ❤️ for you",
+                noNotes: "No notes yet. Add one above! ✨",
+                in: "in",
+                hours: "h",
+                minutes: "m",
+                minutesFull: "minutes",
+                fajr: "Fajr",
+                dhuhr: "Dhuhr",
+                asr: "Asr",
+                maghrib: "Maghrib",
+                isha: "Isha",
+                recipes: "🍳 Recipes",
+                recipesTitle: "🍳 Ramadan Kitchen",
+                recipesSubtitle: "Authentic Middle Eastern flavors for your Ramadan.",
+                breakfast: "Breakfast (Suhoor)",
+                lunch: "Iftar (Main Dish)",
+                dinner: "Dinner",
+                dessert: "Dessert",
+                notifEnabled: "✅ Notifications enabled! Set your reminder time.",
+                notifUnsupported: "❌ Your browser doesn't support notifications.",
+                notifDenied: "❌ Please allow notifications in your browser settings.",
+                reminderSet: "✅ Reminder set for",
+                detectLoc: "Detect Location",
+                detecting: "Detecting...",
+                locSuccess: "Location detected: ",
+                locError: "Error detecting location. Try again.",
+                geoDenied: "Please allow location access.",
+                timesUpdated: "Prayer times updated!",
+                method: "Calculation Method:",
+                madhab: "Asr Method (Madhab):",
+
+                sadaqahTitle: "💝 Sadaqah Planner",
+                sadaqahSubtitle: "Enter your age for personalized charity ideas.",
+                sadaqahBtn: "Get Recommendations",
+                agePlaceholder: "Your Age",
+                sadaqahKids: ["Smile at everyone you meet today", "Help set up the Iftar table with dates", "Feed a stray cat or bird", "Be extra kind to your siblings", "Make a hand-made Ramadan card for your teacher", "Tidy up your toys without being asked", "Help your parents prepare a simple dish", "Share your favorite snack with a friend", "Say 'Thank you' and 'Jazakallah' to everyone", "Read a short story about the Prophets", "Give one of your toys to a younger child", "Help clear the table after Iftar", "Water the plants in your house", "Make a drawing for your grandparents", "Help your mom bake something sweet"],
+                sadaqahTeens: ["Volunteer at a local food bank", "Prepare a special dish for neighbors", "Teach someone a verse of Quran", "Set up the prayer corner at home", "Distribute water bottles at the Masjid during Tarawih", "Write a blog post or social media post about Ramadan", "Organize a small donation drive among friends", "Help your younger siblings with their studies", "Prepare an info sheet about Ramadan for non-Muslim friends", "Offer to do the grocery shopping for an elderly neighbor", "Lead a short discussion after Iftar about a Hadith", "Visit a local hospital or nursing home", "Help clean the Masjid prayer area", "Host a 'virtue of the night' talk with friends", "Donate a book to a community library"],
+                sadaqahAdults: ["Setup a recurring charity donation", "Pay Zakat-ul-Fitr early for your family", "Host an Iftar for someone in need", "Sponsor a water well in a developing country", "Donate your professional skills to a charity for free", "Buy a meal for a homeless person", "Gift a Quran translation to a colleague", "Offer a ride to someone going to the Masjid", "Support a local community project", "Pay off a small debt for a friend in hardship", "Provide dates and water for a public Iftar", "Mentor a young person in your field", "Help a family in your community with their house bills", "Donate blood if you are healthy", "Clean a public space or park in your neighborhood"],
+                sadaqahSeniors: ["Share stories of faith with grandchildren", "Call a relative you haven't spoken to in a long time", "Sponsor an Iftar for an orphan", "Write down your life lessons and wisdom for your family", "Gift your favorite Islamic books to a student", "Teach a child how to perform Wudu correctly", "Sew or mend clothes for those in need", "Donate to an Islamic education center", "Host a small Halaqa (gathering) for neighbors", "Share home-cooked meals with your community", "Offer advice to young couples or parents", "Support a local garden or green space", "Donate hand-crafted items to a charity auction", "Pray for the entire Ummah during the last ten nights", "Gift prayer beads or a prayer mat to a new Muslim"]
+            },
+            ar: {
+                mainTitle: "🌙 رفيق رمضان",
+                mainSubtitle: "دليلك الروحي اليومي",
+                dayLabel: "يوم رمضان",
+                dayOf30: "من ٣٠ يوماً",
+                notRamadan: "يبدأ رمضان خلال",
+                browseDuas: "تصفح الأدعية أدناه ⬇️",
+                days: "أيام",
+                progress: "تقدم رمضان",
+                duaForDay: "دعاء اليوم",
+                prevDay: "اليوم السابق →",
+                today: "📅 اليوم",
+                nextDay: "← اليوم التالي",
+                notifTitle: "🔔 تذكيرات يومية",
+                remindAt: "ذكرني في الساعة:",
+                save: "حفظ",
+                prayerTimes: "🕌 مواقيت الصلاة",
+                nextPrayer: "الصلاة القادمة",
+                savePrayers: "💾 حفظ مواقيت الصلاة",
+                notes: "📝 ملاحظات وتذكيرات شخصية",
+                notePlaceholder: "أدخل ملاحظتك (مثلاً: قراءة سورة الكهف)",
+                addNote: "إضافة ملاحظة",
+                quran: "📖 آيات قرآنية يومية",
+                fullQuran: "📖 المصحف الكامل",
+                home: "🏠 الرئيسية",
+                prev: "← السابق",
+                next: "التالي →",
+                footerMubarak: "رمضان مبارك! 🤲",
+                footerMadeWith: "صنع بقلب ❤️ من أجلك",
+                noNotes: "لا توجد ملاحظات بعد. أضف واحدة أعلاه! ✨",
+                in: "خلال",
+                hours: "س",
+                minutes: "د",
+                minutesFull: "دقيقة",
+                fajr: "الفجر",
+                dhuhr: "الظهر",
+                asr: "العصر",
+                maghrib: "المغرب",
+                isha: "العشاء",
+                recipes: "🍳 وصفات",
+                recipesTitle: "🍳 مطبخ رمضان",
+                recipesSubtitle: "نكهات شرق أوسطية أصيلة لمائدتكم الرمضانية.",
+                breakfast: "السحور",
+                lunch: "فتحة الصيام (رئيسي)",
+                dinner: "العشاء",
+                dessert: "الحلويات",
+                notifEnabled: "✅ تم تفعيل التنبيهات! حدد وقت التذكير.",
+                notifUnsupported: "❌ متصفحك لا يدعم التنبيهات.",
+                notifDenied: "❌ يرجى السماح بالتنبيهات في إعدادات متصفحك.",
+                reminderSet: "✅ تم ضبط التذكير في الساعة",
+                detectLoc: "تحديد الموقع",
+                detecting: "جاري التحديد...",
+                locSuccess: "تم تحديد الموقع: ",
+                locError: "خطأ في تحديد الموقع. حاول ثانية.",
+                geoDenied: "يرجى السماح بالوصول للموقع.",
+                timesUpdated: "تم تحديث مواقيت الصلاة!",
+                method: "طريقة الحساب:",
+                madhab: "مذهب صلاة العصر:",
+
+                sadaqahTitle: "💝 مخطط الصدقة",
+                sadaqahSubtitle: "أدخل عمرك للحصول على أفكار صدقة مخصصة.",
+                sadaqahBtn: "احصل على النصائح",
+                agePlaceholder: "عمرك",
+                sadaqahKids: ["ابتسم في وجه كل من تقابله اليوم", "ساعد في تجهيز مائدة الإفطار بالتمر", "أطعم قطة أو طائراً في الشارع", "كن لطيفاً جداً مع إخوتك اليوم", "اصنع بطاقة تهنئة رمضانية لمعلمك", "رتب ألعابك دون أن يطلب منك أحد", "ساعد والديك في تحضير طبق بسيط", "شارك وجبتك الخفيفة المفضلة مع صديق", "قل 'شكراً' و 'جزاك الله خيراً' للجميع", "اقرأ قصة قصيرة عن الأنبياء", "أعطِ إحدى ألعابك لطفل أصغر منك", "ساعد في تنظيف المائدة بعد الإفطار", "اسقِ النباتات في منزلك", "ارسم لوحة جميلة لجديك", "ساعد والدتك في خبز شيء حلو"],
+                sadaqahTeens: ["تطوع في بنك الطعام المحلي", "جهز طبقاً مميزاً للجيران", "علم شخصاً آية من القرآن", "رتب ركناً للصلاة في المنزل", "وزع زجاجات المياه في المسجد أثناء التراويح", "اكتب منشوراً عن فضائل رمضان على وسائل التواصل", "نظم حملة تبرعات صغيرة بين أصدقائك", "ساعد إخوتك الصغار في دروسهم", "جهز معلومات عن رمضان لأصدقائك غير المسلمين", "اعرض الذهاب للتسوق لجار مسن", "قُد نقاشاً قصيراً بعد الإفطار حول حديث شريف", "زر مستشفى محلياً أو داراً للمسنين", "ساعد في تنظيف منطقة الصلاة بالمسجد", "استضف جلسة عن 'فضائل الليل' مع رفاقك", "تبرع بكتاب لمكتبة المجتمع المحلي"],
+                sadaqahAdults: ["قم بإعداد تبرع خيري دوري", "ادفع زكاة الفطر مبكراً عن عائلتك", "استضف مأدبة إفطار لشخص محتاج", "ساهم في حفر بئر مياه في بلد نامٍ", "تبرع بمهاراتك المهنية لجمعية خيرية مجاناً", "اشترِ وجبة لشخص محتاج", "اهدِ ترجمة للقرآن لزميل في العمل", "أوصل شخصاً إلى المسجد بسيارتك", "ادعم مشروعاً مجتمعياً محلياً", "سدد ديناً صغيراً عن صديق غارق في ضائقة", "وفر التمر والماء لإفطار عام", "كن مرشداً لشاب في مجال عملك", "ساعد عائلة في مجتمعك في دفع الفواتير", "تبرع بالدم إذا كنت بصحة جيدة", "نظف مكاناً عاماً أو حديقة في منطقتك"],
+                sadaqahSeniors: ["شارك قصص الإيمان مع أحفادك", "اتصل بقريب لم تتحدث معه منذ فترة طويلة", "كفل إفطار يتيم", "اكتب دروس حياتك وحكمك لعائلتك", "اهدِ كتبك الإسلامية المفضلة لطالب علم", "علم طفلاً كيف يتوضأ بشكل صحيح", "خِط أو أصلح ملابس للمحتاجين", "تبرع لمركز تعليم إسلامي", "استضف حلقة ذكر صغيرة للجيران", "شارك الوجبات المطبوخة في المنزل مع منطقتك", "قدم النصيحة للأزواج الشباب أو الوالدين", "ادعم حديقة محلية أو مساحة خضراء", "تبرع بمشغولات يدوية لمزاد خيري", "ادعُ للأمة الإسلامية جمعاء في العشر الأواخر", "اهدِ سبحة أو سجادة صلاة لمسلم جديد"]
+            }
+        };
+
+        let currentLang = localStorage.getItem('ramadanLang') || 'en';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('ramadanLang', lang);
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+            const t = TRANSLATIONS[lang];
+            document.getElementById('mainTitle').textContent = t.mainTitle;
+            document.getElementById('mainSubtitle').textContent = t.mainSubtitle;
+            document.getElementById('homeTab').textContent = t.home;
+            document.getElementById('quranTab').textContent = t.fullQuran;
+            document.getElementById('recipesTab').textContent = t.recipes;
+            document.getElementById('prevBtn').textContent = t.prevDay;
+            document.getElementById('todayBtn').textContent = t.today;
+            document.getElementById('nextBtn').textContent = t.nextDay;
+            document.getElementById('notifTitle').textContent = t.notifTitle;
+            document.getElementById('remindAtLabel').textContent = t.remindAt;
+            document.getElementById('saveNotifBtn').textContent = t.save;
+            document.getElementById('prayerTimesTitle').textContent = t.prayerTimes;
+            document.getElementById('nextPrayerLabel').textContent = t.nextPrayer;
+            document.getElementById('savePrayersBtn').textContent = t.savePrayers;
+            document.getElementById('notesTitle').textContent = t.notes;
+            document.getElementById('noteTextInput').placeholder = t.notePlaceholder;
+            document.getElementById('addNoteBtn').textContent = t.addNote;
+            const detectBtn = document.getElementById('detectLocText');
+            if (detectBtn) detectBtn.textContent = t.detectLoc;
+            const methodLabel = document.getElementById('methodLabel');
+            if (methodLabel) methodLabel.textContent = t.method;
+            const madhabLabel = document.getElementById('madhabLabel');
+            if (madhabLabel) madhabLabel.textContent = t.madhab;
+
+            document.getElementById('quranTitle').textContent = t.quran;
+            document.getElementById('homeTab').textContent = t.home;
+            document.getElementById('quranTab').textContent = t.fullQuran;
+            const userAge = document.getElementById('userAge');
+            if (userAge) userAge.placeholder = t.agePlaceholder;
+            document.getElementById('sadaqahTitle').textContent = t.sadaqahTitle;
+            document.getElementById('sadaqahSubtitle').textContent = t.sadaqahSubtitle;
+            document.getElementById('sadaqahBtn').textContent = t.sadaqahBtn;
+            document.getElementById('prevAyahBtn').textContent = t.prev;
+            document.getElementById('nextAyahBtn').textContent = t.next;
+
+            // Update prayer names in list
+            PRAYERS.forEach(p => {
+                const el = document.getElementById(`${p}Name`);
+                if (el) el.textContent = t[p];
+            });
+
+            document.getElementById('footerMubarak').textContent = t.footerMubarak;
+            document.getElementById('footerMadeWith').textContent = t.footerMadeWith;
+
+            // Hide/Show English elements based on logic
+            const englishElements = document.querySelectorAll('.transliteration, .english-text, .adhkar-transliteration, .adhkar-meaning, .ayah-translation');
+            englishElements.forEach(el => {
+                el.style.display = lang === 'ar' ? 'none' : 'block';
+            });
+
+            // Update active state on buttons
+            document.getElementById('enBtn').classList.toggle('active', lang === 'en');
+            document.getElementById('arBtn').classList.toggle('active', lang === 'ar');
+
+            // Re-render dynamic elements
+            updateAll();
+            displayAyah(currentAyahIndex);
+            updateNextPrayer();
+            renderNotes();
+        }
+
+        // 30 Daily Duas
+        const DAILY_DUAS = [
+            { day: 1, arabic: "اللَّهُمَّ اجْعَلْ صِيَامِي فِيهِ صِيَامَ الصَّائِمِينَ", english: "O Allah, make my fasting in it the fasting of those who truly fast.", transliteration: "Allahumma aj'al siyami fihi siyamas-sa'imin" },
+            { day: 2, arabic: "اللَّهُمَّ قَرِّبْنِي فِيهِ إِلَى مَرْضَاتِكَ", english: "O Allah, bring me closer to Your pleasure in this day.", transliteration: "Allahumma qarribni fihi ila mardatik" },
+            { day: 3, arabic: "اللَّهُمَّ ارْزُقْنِي فِيهِ الذِّهْنَ وَالتَّنْبِيهَ", english: "O Allah, grant me awareness and alertness in this day.", transliteration: "Allahumma arzuqni fihidh-dhihna wat-tanbih" },
+            { day: 4, arabic: "اللَّهُمَّ قَوِّنِي فِيهِ عَلَى إِقَامَةِ أَمْرِكَ", english: "O Allah, give me strength to establish Your commands in this day.", transliteration: "Allahumma qawwini fihi ala iqamati amrik" },
+            { day: 5, arabic: "اللَّهُمَّ اجْعَلْنِي فِيهِ مِنَ الْمُسْتَغْفِرِينَ", english: "O Allah, make me among those who seek forgiveness in this day.", transliteration: "Allahumma aj'alni fihil mustaghfirin" },
+            { day: 6, arabic: "اللَّهُمَّ لَا تَخْذُلْنِي فِيهِ لِتَعَرُّضِ مَعْصِيَتِكَ", english: "O Allah, do not abandon me for exposing myself to Your disobedience.", transliteration: "Allahumma la takhdhulni fihi lita'arrudi ma'siyatik" },
+            { day: 7, arabic: "اللَّهُمَّ أَعِنِّي فِيهِ عَلَى صِيَامِهِ وَقِيَامِهِ", english: "O Allah, help me in this day with its fasting and prayers.", transliteration: "Allahumma a'inni fihi ala siyamihi wa qiyamih" },
+            { day: 8, arabic: "اللَّهُمَّ ارْزُقْنِي فِيهِ رَحْمَةَ الْأَيْتَامِ", english: "O Allah, grant me mercy towards orphans in this day.", transliteration: "Allahumma arzuqni fihi rahmatal aytam" },
+            { day: 9, arabic: "اللَّهُمَّ اجْعَلْ لِي فِيهِ نَصِيبًا مِنْ رَحْمَتِكَ الْوَاسِعَةِ", english: "O Allah, give me a share of Your vast mercy in this day.", transliteration: "Allahumma aj'al li fihi nasiban min rahmatik al-wasi'ah" },
+            { day: 10, arabic: "اللَّهُمَّ اجْعَلْنِي فِيهِ مِنَ الْمُتَوَكِّلِينَ عَلَيْكَ", english: "O Allah, make me among those who trust in You in this day.", transliteration: "Allahumma aj'alni fihil mutawakkilin alayk" },
+            { day: 11, arabic: "اللَّهُمَّ حَبِّبْ إِلَيَّ فِيهِ الْإِحْسَانَ", english: "O Allah, make me love doing good in this day.", transliteration: "Allahumma habbib ilayya fihil ihsan" },
+            { day: 12, arabic: "اللَّهُمَّ زَيِّنِّي فِيهِ بِالسِّتْرِ وَالْعَفَافِ", english: "O Allah, adorn me with modesty and chastity in this day.", transliteration: "Allahumma zayyinni fihi bis-sitri wal-afaf" },
+            { day: 13, arabic: "اللَّهُمَّ طَهِّرْنِي فِيهِ مِنَ الدَّنَسِ وَالْأَقْذَارِ", english: "O Allah, purify me from impurities in this day.", transliteration: "Allahumma tahhirni fihil min ad-danasi wal-aqdhaar" },
+            { day: 14, arabic: "اللَّهُمَّ لَا تُؤَاخِذْنِي فِيهِ بِالْعَثَرَاتِ", english: "O Allah, do not hold me accountable for my slips in this day.", transliteration: "Allahumma la tu'akhidhni fihi bil-atharat" },
+            { day: 15, arabic: "اللَّهُمَّ ارْزُقْنِي فِيهِ طَاعَةَ الْخَاشِعِينَ", english: "O Allah, grant me the obedience of the humble in this day.", transliteration: "Allahumma arzuqni fihi ta'atal khashi'in" },
+            { day: 16, arabic: "اللَّهُمَّ وَفِّقْنِي فِيهِ لِمُوَافَقَةِ الْأَبْرَارِ", english: "O Allah, grant me success to be with the righteous in this day.", transliteration: "Allahumma waffiqni fihi limuwafaqatil abrar" },
+            { day: 17, arabic: "اللَّهُمَّ اهْدِنِي فِيهِ لِصَالِحِ الْأَعْمَالِ", english: "O Allah, guide me to righteous deeds in this day.", transliteration: "Allahumma ahdini fihi lisalihil a'mal" },
+            { day: 18, arabic: "اللَّهُمَّ نَبِّهْنِي فِيهِ لِبَرَكَاتِ أَسْحَارِهِ", english: "O Allah, awaken me to the blessings of its pre-dawn hours.", transliteration: "Allahumma nabbihni fihi libarakati asharih" },
+            { day: 19, arabic: "اللَّهُمَّ وَفِّرْ حَظِّي فِيهِ مِنْ بَرَكَاتِهِ", english: "O Allah, increase my share of its blessings in this day.", transliteration: "Allahumma waffir hazzi fihi min barakatih" },
+            { day: 20, arabic: "اللَّهُمَّ افْتَحْ لِي فِيهِ أَبْوَابَ الْجِنَانِ", english: "O Allah, open for me the gates of Paradise in this day.", transliteration: "Allahumma iftah li fihi abwabal jinan" },
+            { day: 21, arabic: "اللَّهُمَّ اجْعَلْ لِي فِيهِ إِلَى مَرْضَاتِكَ دَلِيلًا", english: "O Allah, provide me a guide to Your pleasure in this day.", transliteration: "Allahumma aj'al li fihi ila mardatika dalila" },
+            { day: 22, arabic: "اللَّهُمَّ افْتَحْ لِي فِيهِ أَبْوَابَ فَضْلِكَ", english: "O Allah, open for me the doors of Your grace in this day.", transliteration: "Allahumma iftah li fihi abwaba fadlik" },
+            { day: 23, arabic: "اللَّهُمَّ اغْسِلْنِي فِيهِ مِنَ الذُّنُوبِ", english: "O Allah, wash away my sins in this day.", transliteration: "Allahumma ighsilni fihil min adh-dhunub" },
+            { day: 24, arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ فِيهِ مَا يُرْضِيكَ", english: "O Allah, I ask You for what pleases You in this day.", transliteration: "Allahumma inni as'aluka fihi ma yurdik" },
+            { day: 25, arabic: "اللَّهُمَّ اجْعَلْنِي فِيهِ مُحِبًّا لِأَوْلِيَائِكَ", english: "O Allah, make me love Your friends in this day.", transliteration: "Allahumma aj'alni fihi muhibban li awliya'ik" },
+            { day: 26, arabic: "اللَّهُمَّ اجْعَلْ سَعْيِي فِيهِ مَشْكُورًا", english: "O Allah, make my efforts appreciated in this day.", transliteration: "Allahumma aj'al sa'yi fihi mashkura" },
+            { day: 27, arabic: "اللَّهُمَّ ارْزُقْنِي فِيهِ فَضْلَ لَيْلَةِ الْقَدْرِ", english: "O Allah, grant me the blessings of Laylatul Qadr in this day.", transliteration: "Allahumma arzuqni fihi fadla laylatul qadr" },
+            { day: 28, arabic: "اللَّهُمَّ وَفِّرْ حَظِّي فِيهِ مِنَ النَّوَافِلِ", english: "O Allah, increase my share of voluntary prayers in this day.", transliteration: "Allahumma waffir hazzi fihil min an-nawafil" },
+            { day: 29, arabic: "اللَّهُمَّ غَشِّنِي فِيهِ بِالرَّحْمَةِ", english: "O Allah, cover me with mercy in this day.", transliteration: "Allahumma ghashshini fihi bir-rahmah" },
+            { day: 30, arabic: "اللَّهُمَّ اجْعَلْ صِيَامِي فِيهِ بِالشُّكْرِ وَالْقَبُولِ", english: "O Allah, make my fasting accepted with gratitude in this day.", transliteration: "Allahumma aj'al siyami fihi bish-shukri wal-qabul" }
+        ];
+
+        let currentViewDay = null;
+        let actualRamadanDay = null;
+
+        // Location & Prayer API functions
+        async function detectLocation() {
+            const status = document.getElementById('locationStatus');
+            const t = TRANSLATIONS[currentLang];
+
+            if (!navigator.geolocation) {
+                status.textContent = t.locError;
+                status.className = 'location-status error';
+                return;
+            }
+
+            status.textContent = t.detecting;
+            status.className = 'location-status';
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    await fetchPrayerTimes(latitude, longitude);
+                },
+                (error) => {
+                    status.textContent = t.geoDenied;
+                    status.className = 'location-status error';
+                }
+            );
+        }
+
+        async function fetchPrayerTimes(lat, lon) {
+            const status = document.getElementById('locationStatus');
+            const t = TRANSLATIONS[currentLang];
+
+            try {
+                const method = document.getElementById('calcMethod').value;
+                const school = document.getElementById('asrMadhab').value;
+                localStorage.setItem('prayerMethod', method);
+                localStorage.setItem('asrMadhab', school);
+
+                // Use Aladhan API with selected method and school (Madhab)
+                const response = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=${method}&school=${school}`);
+                const data = await response.json();
+
+                if (data.code === 200) {
+                    const timings = data.data.timings;
+                    const meta = data.data.meta;
+
+                    // Update individual inputs
+                    document.getElementById('fajrTime').value = timings.Fajr;
+                    document.getElementById('dhuhrTime').value = timings.Dhuhr;
+                    document.getElementById('asrTime').value = timings.Asr;
+                    document.getElementById('maghribTime').value = timings.Maghrib;
+                    document.getElementById('ishaTime').value = timings.Isha;
+
+                    // Save and update
+                    savePrayerTimes();
+
+                    const location = meta.timezone.split('/').pop().replace('_', ' ');
+                    status.textContent = `✅ ${t.locSuccess}${location}. ${t.timesUpdated}`;
+                    status.className = 'location-status success';
+
+                    // Auto-hide status after 5 seconds
+                    setTimeout(() => {
+                        status.textContent = '';
+                    }, 5000);
+                } else {
+                    status.textContent = t.locError;
+                    status.className = 'location-status error';
+                }
+            } catch (error) {
+                status.textContent = t.locError;
+                status.className = 'location-status error';
+            }
+        }
+
+        // Create animated stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.width = (Math.random() * 2 + 1) + 'px';
+                star.style.height = star.style.width;
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Calculate current Ramadan day
+        function getRamadanDay() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Check 2026
+            const start2026 = new Date(RAMADAN_START_2026);
+            start2026.setHours(0, 0, 0, 0);
+            const end2026 = new Date(start2026);
+            end2026.setDate(end2026.getDate() + 29);
+
+            if (today >= start2026 && today <= end2026) {
+                return Math.floor((today - start2026) / (1000 * 60 * 60 * 24)) + 1;
+            }
+
+            // Check 2027
+            const start2027 = new Date(RAMADAN_START_2027);
+            start2027.setHours(0, 0, 0, 0);
+            const end2027 = new Date(start2027);
+            end2027.setDate(end2027.getDate() + 29);
+
+            if (today >= start2027 && today <= end2027) {
+                return Math.floor((today - start2027) / (1000 * 60 * 60 * 24)) + 1;
+            }
+
+            return null;
+        }
+
+        // Get days until Ramadan
+        function getDaysUntilRamadan() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            let nextRamadan = new Date(RAMADAN_START_2026);
+            if (today > new Date(RAMADAN_START_2026)) {
+                nextRamadan = new Date(RAMADAN_START_2027);
+            }
+
+            return Math.ceil((nextRamadan - today) / (1000 * 60 * 60 * 24));
+        }
+
+        // Update the day card
+        function updateDayCard() {
+            const dayCard = document.getElementById('dayCard');
+            actualRamadanDay = getRamadanDay();
+            const t = TRANSLATIONS[currentLang];
+
+            if (actualRamadanDay) {
+                if (currentViewDay === null) currentViewDay = actualRamadanDay;
+                dayCard.innerHTML = `
+                    <div class="day-label">${t.dayLabel}</div>
+                    <div class="day-number">${currentViewDay}</div>
+                    <div class="day-of-30">${t.dayOf30}</div>
+                `;
+            } else {
+                currentViewDay = 1; // Default to day 1 for browsing
+                const daysUntil = getDaysUntilRamadan();
+                dayCard.innerHTML = `
+                    <div class="not-ramadan">${t.notRamadan}</div>
+                    <div class="countdown">${daysUntil} ${t.days}</div>
+                    <div class="day-of-30">${t.browseDuas}</div>
+                `;
+            }
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const container = document.getElementById('progressContainer');
+            const actualDay = getRamadanDay();
+            const t = TRANSLATIONS[currentLang];
+
+            if (!actualDay) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            const progress = (actualDay / 30) * 100;
+
+            container.innerHTML = `
+                <div class="progress-label">
+                    <span>${t.progress}</span>
+                    <span>${actualDay}/30 ${t.days}</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%"></div>
+                </div>
+            `;
+        }
+
+        // Update dua card
+        function updateDuaCard() {
+            const duaCard = document.getElementById('duaCard');
+            const dua = DAILY_DUAS[currentViewDay - 1];
+            const t = TRANSLATIONS[currentLang];
+
+            duaCard.innerHTML = `
+                <div class="dua-header">
+                    <span class="dua-title">✨ ${t.duaForDay} ${currentViewDay}</span>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="speak-btn" onclick="speakDua()" id="speakBtn" title="Read Aloud">
+                            <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                        </button>
+                        <button class="fullscreen-btn" onclick="openFullScreen('dua')" title="Full Screen">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="arabic-text">${dua.arabic}</div>
+                <div class="transliteration" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.transliteration}</div>
+                <div class="english-text" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.english}</div>
+            `;
+        }
+
+        // Full Screen Functions
+        function openFullScreen(type, elementId) {
+            const overlay = document.getElementById('fullscreenOverlay');
+            const content = document.getElementById('fullscreenContent');
+            let innerHTML = '';
+
+            if (type === 'dua') {
+                const dua = DAILY_DUAS[currentViewDay - 1];
+                const t = TRANSLATIONS[currentLang];
+                innerHTML = `
+                    <span class="dua-title">✨ ${t.duaForDay} ${currentViewDay}</span>
+                    <div class="arabic-text">${dua.arabic}</div>
+                    <div class="transliteration" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.transliteration}</div>
+                    <div class="english-text" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.english}</div>
+                `;
+            } else if (type === 'ayah') {
+                const surah = getTodaysSurah();
+                const ayah = surah.ayahs[currentAyahIndex];
+                const t = TRANSLATIONS[currentLang];
+                innerHTML = `
+                    <span class="quran-title">📖 ${t.quran}</span>
+                    <div class="ayah-arabic">${ayah.arabic}</div>
+                    <div class="ayah-translation" style="${currentLang === 'ar' ? 'display:none' : ''}">${ayah.translation}</div>
+                    <div class="ayah-reference">📍 ${surah.name} ${ayah.verse}</div>
+                `;
+            } else if (type === 'adhkar') {
+                const el = document.getElementById(elementId);
+                innerHTML = el.innerHTML;
+                // Remove the fullscreen button from the cloned content
+                innerHTML = innerHTML.replace(/<button.*fullscreen-btn.*<\/button>/g, '');
+
+                if (currentLang === 'ar') {
+                    // Hide English parts in Arabic mode
+                    innerHTML = innerHTML.replace(/class="adhkar-transliteration"/g, 'class="adhkar-transliteration" style="display:none"');
+                    innerHTML = innerHTML.replace(/class="adhkar-meaning"/g, 'class="adhkar-meaning" style="display:none"');
+                }
+            }
+
+            content.innerHTML = innerHTML;
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFullScreen() {
+            document.getElementById('fullscreenOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function handleOverlayClick(e) {
+            if (e.target.id === 'fullscreenOverlay') {
+                closeFullScreen();
+            }
+        }
+
+        // Get the best Arabic voice available
+        let cachedVoices = [];
+
+        function loadVoices() {
+            cachedVoices = window.speechSynthesis.getVoices();
+        }
+
+        // Load voices on page load and when they change
+        loadVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        function getArabicVoice() {
+            const voices = cachedVoices.length > 0 ? cachedVoices : window.speechSynthesis.getVoices();
+
+            // Priority list of Arabic accents to try (best first)
+            const arabicLocales = [
+                'ar-SA', // Saudi Arabia
+                'ar-AE', // UAE
+                'ar-EG', // Egypt
+                'ar-KW', // Kuwait
+                'ar-QA', // Qatar
+                'ar-BH', // Bahrain
+                'ar-OM', // Oman
+                'ar-JO', // Jordan
+                'ar-LB', // Lebanon
+                'ar-SY', // Syria
+                'ar-IQ', // Iraq
+                'ar-YE', // Yemen
+                'ar-LY', // Libya
+                'ar-TN', // Tunisia
+                'ar-DZ', // Algeria
+                'ar-MA', // Morocco
+                'ar'     // Generic Arabic
+            ];
+
+            // Try to find a voice matching our priority list
+            for (const locale of arabicLocales) {
+                const voice = voices.find(v => v.lang === locale || v.lang.startsWith(locale));
+                if (voice) {
+                    console.log('Found Arabic voice:', voice.name, voice.lang);
+                    return voice;
+                }
+            }
+
+            // Fallback: look for any voice with "arab" in the name
+            const arabicByName = voices.find(v =>
+                v.name.toLowerCase().includes('arabic') ||
+                v.name.toLowerCase().includes('arab')
+            );
+
+            if (arabicByName) {
+                console.log('Found Arabic voice by name:', arabicByName.name);
+                return arabicByName;
+            }
+
+            console.log('No Arabic voice found. Available voices:', voices.map(v => `${v.name} (${v.lang})`));
+            return null;
+        }
+
+        // Text-to-speech in Arabic with authentic accent
+        function speakDua() {
+            const dua = DAILY_DUAS[currentViewDay - 1];
+            const btn = document.getElementById('speakBtn');
+
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+
+            // Create utterance with Arabic text
+            const utterance = new SpeechSynthesisUtterance(dua.arabic);
+
+            // Try to use an Arabic voice first
+            const arabicVoice = getArabicVoice();
+            if (arabicVoice) {
+                utterance.voice = arabicVoice;
+                utterance.lang = arabicVoice.lang;
+            } else {
+                // Force Arabic language even without a specific voice
+                utterance.lang = 'ar-SA';
+            }
+
+            // Natural speech settings for Arabic recitation
+            utterance.rate = 0.75; // Slower for beautiful recitation
+            utterance.pitch = 0.95; // Slightly lower for reverent tone
+            utterance.volume = 1.0;
+
+            btn.classList.add('speaking');
+            utterance.onend = () => btn.classList.remove('speaking');
+            utterance.onerror = (e) => {
+                console.log('Speech error:', e);
+                btn.classList.remove('speaking');
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+
+        // Navigation
+        function changeDay(delta) {
+            const newDay = currentViewDay + delta;
+            if (newDay >= 1 && newDay <= 30) {
+                currentViewDay = newDay;
+                updateAll();
+            }
+        }
+
+        function goToToday() {
+            if (actualRamadanDay) {
+                currentViewDay = actualRamadanDay;
+            } else {
+                currentViewDay = 1;
+            }
+            updateAll();
+        }
+
+        function updateNavButtons() {
+            document.getElementById('prevBtn').disabled = currentViewDay <= 1;
+            document.getElementById('nextBtn').disabled = currentViewDay >= 30;
+        }
+
+        function updateAll() {
+            updateDayCard();
+            updateProgress();
+            updateDuaCard();
+            updateNavButtons();
+        }
+
+        // ==================== NOTIFICATIONS ====================
+
+        let notificationTimer = null;
+
+        // Request notification permission
+        async function requestNotificationPermission() {
+            if (!('Notification' in window)) {
+                return 'unsupported';
+            }
+
+            if (Notification.permission === 'granted') {
+                return 'granted';
+            }
+
+            if (Notification.permission !== 'denied') {
+                const permission = await Notification.requestPermission();
+                return permission;
+            }
+
+            return Notification.permission;
+        }
+
+        // Toggle notifications on/off
+        async function toggleNotifications() {
+            const toggle = document.getElementById('notificationToggle');
+            const settings = document.getElementById('notificationSettings');
+            const status = document.getElementById('notificationStatus');
+
+            const t = TRANSLATIONS[currentLang];
+            if (toggle.checked) {
+                // Request permission
+                const permission = await requestNotificationPermission();
+
+                if (permission === 'granted') {
+                    settings.classList.add('active');
+                    localStorage.setItem('ramadanNotificationsEnabled', 'true');
+                    status.textContent = t.notifEnabled;
+                    status.className = 'notification-status success';
+
+                    // Show a test notification
+                    showNotification(t.mainTitle, t.notifEnabled);
+
+                    // Set up the reminder
+                    setupDailyReminder();
+                } else if (permission === 'unsupported') {
+                    toggle.checked = false;
+                    status.textContent = t.notifUnsupported;
+                    status.className = 'notification-status';
+                } else {
+                    toggle.checked = false;
+                    status.textContent = t.notifDenied;
+                    status.className = 'notification-status';
+                }
+            } else {
+                settings.classList.remove('active');
+                localStorage.setItem('ramadanNotifications', 'disabled');
+                if (notificationTimer) {
+                    clearTimeout(notificationTimer);
+                }
+                status.textContent = '';
+            }
+        }
+
+        // Show a notification
+        function showNotification(title, body) {
+            if (Notification.permission === 'granted') {
+                const notification = new Notification(title, {
+                    body: body,
+                    icon: '🌙',
+                    badge: '🌙',
+                    tag: 'ramadan-dua',
+                    requireInteraction: true
+                });
+
+                notification.onclick = () => {
+                    window.focus();
+                    notification.close();
+                };
+            }
+        }
+
+        // Save reminder time
+        function saveReminderTime() {
+            const time = document.getElementById('reminderTime').value;
+            localStorage.setItem('ramadanReminderTime', time);
+
+            const status = document.getElementById('notificationStatus');
+            const t = TRANSLATIONS[currentLang];
+            status.textContent = `✅ ${t.reminderSet} ${formatTime(time)}!`;
+            status.className = 'notification-status success';
+
+            setupAllReminders();
+        }
+
+        // Format time for display
+        function formatTime(time24) {
+            const [hours, minutes] = time24.split(':');
+            const h = parseInt(hours);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const h12 = h % 12 || 12;
+            return `${h12}:${minutes} ${ampm}`;
+        }
+
+        // Setup all reminders
+        function setupAllReminders() {
+            // Clear existing timers
+            if (window.notificationTimers) {
+                window.notificationTimers.forEach(id => clearTimeout(id));
+            }
+            window.notificationTimers = [];
+
+            const t = TRANSLATIONS[currentLang];
+            const now = new Date();
+            const ramadanDay = getRamadanDay();
+
+            // 1. User's custom daily dua reminder
+            const savedTime = localStorage.getItem('ramadanReminderTime') || '05:00';
+            scheduleNotification(savedTime, "🌙 " + t.mainTitle, t.notifTitle, () => {
+                const day = ramadanDay || 1;
+                const dua = DAILY_DUAS[day - 1];
+                return `${t.duaForDay} ${day}: ${dua.arabic}`;
+            });
+
+            // Prayer-based and Fasting-based reminders (if times are available)
+            const savedPrayers = localStorage.getItem('prayerTimes');
+            if (savedPrayers) {
+                const times = JSON.parse(savedPrayers);
+
+                // Fasting Reminders ONLY IF IT'S RAMADAN
+                if (ramadanDay) {
+                    // 2. Sahoor Reminder (30 mins before Fajr)
+                    if (times.fajr) {
+                        const sahoorTime = offsetTime(times.fajr, -30);
+                        scheduleNotification(sahoorTime, "🌙 Sahoor Alert", "Time for Sahoor! Fajr is in 30 minutes. Eat and drink for the day's fast. 🍞🥛");
+                    }
+
+                    // 3. Dates Before Iftar (10 mins before Maghrib)
+                    if (times.maghrib) {
+                        const iftarTime = offsetTime(times.maghrib, -10);
+                        scheduleNotification(iftarTime, "🍽️ Iftar Reminder", "Time to prepare dates! Iftar is in 10 minutes. 🌴");
+                    }
+
+                    // 4. Tarawih Reminder (30 mins after Isha)
+                    if (times.isha) {
+                        const tarawihTime = offsetTime(times.isha, 30);
+                        scheduleNotification(tarawihTime, "🕌 Tarawih Prayer", "Don't forget Tarawih prayer tonight! ✨");
+                    }
+                }
+
+                // 5. Istighfar 100x Reminder (Morning - 10 AM)
+                scheduleNotification("10:00", "📿 Daily Dhikr", "Time for Istighfar 100x: Astaghfirullah. 🤲");
+
+                // 6. Salawat Reminder (Afternoon - 3 PM)
+                scheduleNotification("15:00", "✨ Salawat", "O Allah, send blessings upon Muhammad and the family of Muhammad. 🌙");
+            }
+        }
+
+        // Helper to offset time (e.g., "18:30" + 30 = "19:00")
+        function offsetTime(timeStr, offsetMinutes) {
+            const [h, m] = timeStr.split(':').map(Number);
+            const date = new Date();
+            date.setHours(h, m + offsetMinutes, 0);
+            return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+        }
+
+        // Generic scheduler
+        function scheduleNotification(time24, title, body, bodyFn) {
+            const [hours, minutes] = time24.split(':').map(Number);
+            const now = new Date();
+            const target = new Date();
+            target.setHours(hours, minutes, 0, 0);
+
+            if (target <= now) {
+                target.setDate(target.getDate() + 1);
+            }
+
+            const msUntil = target - now;
+            const timerId = setTimeout(() => {
+                const actualBody = bodyFn ? bodyFn() : body;
+                showNotification(title, actualBody);
+                // Re-schedule for tomorrow
+                scheduleNotification(time24, title, body, bodyFn);
+            }, msUntil);
+
+            window.notificationTimers.push(timerId);
+        }
+
+        // Generate Sadaqah Plan
+        function generateSadaqahPlan() {
+            const ageInput = document.getElementById('userAge');
+            const planContainer = document.getElementById('sadaqahPlan');
+            const age = parseInt(ageInput.value);
+            const t = TRANSLATIONS[currentLang];
+
+            if (!age || age < 1) {
+                alert(currentLang === 'ar' ? "يرجى إدخال عمر صحيح" : "Please enter a valid age");
+                return;
+            }
+
+            let pool = [];
+            if (age < 11) {
+                pool = t.sadaqahKids;
+            } else if (age < 20) {
+                pool = t.sadaqahTeens;
+            } else if (age < 60) {
+                pool = t.sadaqahAdults;
+            } else {
+                pool = t.sadaqahSeniors;
+            }
+
+            // Pick 3 unique suggestions based on the age
+            // Using a multiplier to shift the list significantly for each age
+            const start = (age * 7) % pool.length;
+            const suggestions = [
+                pool[start],
+                pool[(start + 1) % pool.length],
+                pool[(start + 2) % pool.length]
+            ];
+
+            planContainer.innerHTML = suggestions.map(s => `
+                <div class="sadaqah-item">
+                    <span class="sadaqah-bullet">✨</span>
+                    <span>${s}</span>
+                </div>
+            `).join('');
+
+            planContainer.style.display = 'block';
+            planContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Load saved notification settings
+        function loadNotificationSettings() {
+            const enabled = localStorage.getItem('ramadanNotifications') === 'enabled';
+            const savedTime = localStorage.getItem('ramadanReminderTime') || '05:00';
+
+            const toggle = document.getElementById('notificationToggle');
+            const settings = document.getElementById('notificationSettings');
+            const timeInput = document.getElementById('reminderTime');
+            const status = document.getElementById('notificationStatus');
+
+            timeInput.value = savedTime;
+
+            if (enabled && Notification.permission === 'granted') {
+                toggle.checked = true;
+                settings.classList.add('active');
+                const t = TRANSLATIONS[currentLang];
+                status.textContent = `✅ ${t.reminderSet} ${formatTime(savedTime)}`;
+                status.className = 'notification-status success';
+                setupAllReminders();
+            }
+        }
+
+        // ==================== PRAYER TIMES ====================
+
+        const PRAYERS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+        const PRAYER_NAMES = {
+            fajr: 'Fajr',
+            dhuhr: 'Dhuhr',
+            asr: 'Asr',
+            maghrib: 'Maghrib',
+            isha: 'Isha'
+        };
+
+        // Save prayer times to localStorage
+        function savePrayerTimes() {
+            const times = {};
+            PRAYERS.forEach(prayer => {
+                const input = document.getElementById(`${prayer}Time`);
+                if (input) {
+                    times[prayer] = input.value;
+                }
+            });
+            localStorage.setItem('prayerTimes', JSON.stringify(times));
+            updateNextPrayer();
+
+            // Show brief confirmation
+            const btn = document.querySelector('.save-prayers-btn');
+            const originalText = btn.textContent;
+            btn.textContent = currentLang === 'ar' ? '✅ تم الحفظ!' : '✅ Saved!';
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 1500);
+        }
+
+        // Load prayer times from localStorage
+        function loadPrayerTimes() {
+            const saved = localStorage.getItem('prayerTimes');
+            if (saved) {
+                const times = JSON.parse(saved);
+                PRAYERS.forEach(prayer => {
+                    const input = document.getElementById(`${prayer}Time`);
+                    if (input && times[prayer]) {
+                        input.value = times[prayer];
+                    }
+                });
+            }
+        }
+
+        // Get next prayer
+        function getNextPrayer() {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+            let nextPrayer = null;
+            let nextPrayerMinutes = Infinity;
+            let minutesUntil = Infinity;
+
+            PRAYERS.forEach(prayer => {
+                const input = document.getElementById(`${prayer}Time`);
+                if (input) {
+                    const [hours, mins] = input.value.split(':').map(Number);
+                    const prayerMinutes = hours * 60 + mins;
+
+                    // Check if this prayer is still ahead today
+                    if (prayerMinutes > currentMinutes) {
+                        if (prayerMinutes < nextPrayerMinutes) {
+                            nextPrayer = prayer;
+                            nextPrayerMinutes = prayerMinutes;
+                            minutesUntil = prayerMinutes - currentMinutes;
+                        }
+                    }
+                }
+            });
+
+            // If no prayer left today, next is Fajr tomorrow
+            if (!nextPrayer) {
+                const fajrInput = document.getElementById('fajrTime');
+                if (fajrInput) {
+                    const [hours, mins] = fajrInput.value.split(':').map(Number);
+                    nextPrayer = 'fajr';
+                    minutesUntil = (24 * 60 - currentMinutes) + (hours * 60 + mins);
+                }
+            }
+
+            return { prayer: nextPrayer, minutesUntil };
+        }
+
+        // Update next prayer display
+        function updateNextPrayer() {
+            const { prayer, minutesUntil } = getNextPrayer();
+
+            if (prayer) {
+                const nameEl = document.getElementById('nextPrayerName');
+                const countdownEl = document.getElementById('nextPrayerCountdown');
+
+                const t = TRANSLATIONS[currentLang];
+                nameEl.textContent = t[prayer];
+
+                const hours = Math.floor(minutesUntil / 60);
+                const mins = minutesUntil % 60;
+
+                if (hours > 0) {
+                    countdownEl.textContent = `${t.in} ${hours}${t.hours} ${mins}${t.minutes}`;
+                } else {
+                    countdownEl.textContent = `${t.in} ${mins} ${t.minutesFull}`;
+                }
+
+                // Highlight the next prayer item
+                PRAYERS.forEach(p => {
+                    const item = document.getElementById(`${p}Item`);
+                    if (item) {
+                        item.classList.remove('active');
+                        if (p === prayer) {
+                            item.classList.add('active');
+                        }
+                    }
+                });
+            }
+        }
+
+        // ==================== QURAN AYAHS (Same Surah, Changes Daily) ====================
+
+        const DAILY_SURAHS = {
+            0: {
+                name: "Surah Yasin", ayahs: [
+                    { arabic: "يس", translation: "Ya-Sin.", verse: "36:1" },
+                    { arabic: "وَالْقُرْآنِ الْحَكِيمِ", translation: "By the wise Quran.", verse: "36:2" },
+                    { arabic: "إِنَّكَ لَمِنَ الْمُرْسَلِينَ", translation: "Indeed you are from among the messengers.", verse: "36:3" },
+                    { arabic: "عَلَىٰ صِرَاطٍ مُّسْتَقِيمٍ", translation: "On a straight path.", verse: "36:4" },
+                    { arabic: "تَنزِيلَ الْعَزِيزِ الرَّحِيمِ", translation: "A revelation of the Exalted in Might, the Merciful.", verse: "36:5" },
+                    { arabic: "لِتُنذِرَ قَوْمًا مَّا أُنذِرَ آبَاؤُهُمْ فَهُمْ غَافِلُونَ", translation: "That you may warn a people whose forefathers were not warned, so they are unaware.", verse: "36:6" },
+                    { arabic: "إِنَّا نَحْنُ نُحْيِي الْمَوْتَىٰ", translation: "Indeed, it is We who bring the dead to life.", verse: "36:12" },
+                    { arabic: "وَنَكْتُبُ مَا قَدَّمُوا وَآثَارَهُمْ", translation: "And We record what they have put forth and their footprints.", verse: "36:12" },
+                    { arabic: "وَكُلَّ شَيْءٍ أَحْصَيْنَاهُ فِي إِمَامٍ مُّبِينٍ", translation: "And all things We have enumerated in a clear register.", verse: "36:12" },
+                    { arabic: "سُبْحَانَ الَّذِي خَلَقَ الْأَزْوَاجَ كُلَّهَا", translation: "Exalted is He who created all pairs.", verse: "36:36" }
+                ]
+            },
+            1: {
+                name: "Surah Ar-Rahman", ayahs: [
+                    { arabic: "الرَّحْمَٰنُ", translation: "The Most Merciful.", verse: "55:1" },
+                    { arabic: "عَلَّمَ الْقُرْآنَ", translation: "Taught the Quran.", verse: "55:2" },
+                    { arabic: "خَلَقَ الْإِنسَانَ", translation: "Created man.", verse: "55:3" },
+                    { arabic: "عَلَّمَهُ الْبَيَانَ", translation: "Taught him eloquence.", verse: "55:4" },
+                    { arabic: "الشَّمْسُ وَالْقَمَرُ بِحُسْبَانٍ", translation: "The sun and the moon move by precise calculation.", verse: "55:5" },
+                    { arabic: "وَالنَّجْمُ وَالشَّجَرُ يَسْجُدَانِ", translation: "And the stars and trees prostrate.", verse: "55:6" },
+                    { arabic: "وَالسَّمَاءَ رَفَعَهَا وَوَضَعَ الْمِيزَانَ", translation: "And the heaven He raised and imposed the balance.", verse: "55:7" },
+                    { arabic: "فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ", translation: "So which of the favors of your Lord would you deny?", verse: "55:13" },
+                    { arabic: "خَلَقَ الْإِنسَانَ مِن صَلْصَالٍ كَالْفَخَّارِ", translation: "He created man from clay like pottery.", verse: "55:14" },
+                    { arabic: "وَخَلَقَ الْجَانَّ مِن مَّارِجٍ مِّن نَّارٍ", translation: "And He created the jinn from a smokeless flame of fire.", verse: "55:15" }
+                ]
+            },
+            2: {
+                name: "Surah Al-Mulk", ayahs: [
+                    { arabic: "تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ", translation: "Blessed is He in whose hand is dominion.", verse: "67:1" },
+                    { arabic: "وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ", translation: "And He is over all things competent.", verse: "67:1" },
+                    { arabic: "الَّذِي خَلَقَ الْمَوْتَ وَالْحَيَاةَ", translation: "He who created death and life.", verse: "67:2" },
+                    { arabic: "لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا", translation: "To test you as to which of you is best in deed.", verse: "67:2" },
+                    { arabic: "وَهُوَ الْعَزِيزُ الْغَفُورُ", translation: "And He is the Exalted in Might, the Forgiving.", verse: "67:2" },
+                    { arabic: "الَّذِي خَلَقَ سَبْعَ سَمَاوَاتٍ طِبَاقًا", translation: "He who created seven heavens in layers.", verse: "67:3" },
+                    { arabic: "مَّا تَرَىٰ فِي خَلْقِ الرَّحْمَٰنِ مِن تَفَاوُتٍ", translation: "You do not see in the creation of the Most Merciful any inconsistency.", verse: "67:3" },
+                    { arabic: "فَارْجِعِ الْبَصَرَ هَلْ تَرَىٰ مِن فُطُورٍ", translation: "So return your vision, do you see any breaks?", verse: "67:3" },
+                    { arabic: "وَلَقَدْ زَيَّنَّا السَّمَاءَ الدُّنْيَا بِمَصَابِيحَ", translation: "And We have certainly beautified the nearest heaven with stars.", verse: "67:5" },
+                    { arabic: "وَجَعَلْنَاهَا رُجُومًا لِّلشَّيَاطِينِ", translation: "And have made them as missiles to drive away the devils.", verse: "67:5" }
+                ]
+            }
+        };
+
+        let currentAyahIndex = 0;
+
+        function getTodaysSurah() {
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const surahIndex = dayOfYear % Object.keys(DAILY_SURAHS).length;
+            return DAILY_SURAHS[surahIndex];
+        }
+
+        function displayAyah(index) {
+            const surah = getTodaysSurah();
+            const ayah = surah.ayahs[index];
+            document.getElementById('ayahArabic').textContent = ayah.arabic;
+            document.getElementById('ayahTranslation').textContent = ayah.translation;
+            document.getElementById('ayahTranslation').style.display = currentLang === 'ar' ? 'none' : 'block';
+            document.getElementById('ayahReference').textContent = `📍 ${surah.name} ${ayah.verse}`;
+        }
+
+        function nextAyah() {
+            const surah = getTodaysSurah();
+            currentAyahIndex = (currentAyahIndex + 1) % surah.ayahs.length;
+            displayAyah(currentAyahIndex);
+        }
+
+        function prevAyah() {
+            const surah = getTodaysSurah();
+            currentAyahIndex = (currentAyahIndex - 1 + surah.ayahs.length) % surah.ayahs.length;
+            displayAyah(currentAyahIndex);
+        }
+
+        // ==================== PRAYER NOTIFICATIONS ====================
+
+        let prayerCheckInterval = null;
+
+        function setupPrayerNotifications() {
+            if (prayerCheckInterval) clearInterval(prayerCheckInterval);
+
+            prayerCheckInterval = setInterval(() => {
+                if (localStorage.getItem('ramadanNotifications') !== 'enabled') return;
+                if (Notification.permission !== 'granted') return;
+
+                const now = new Date();
+                const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+                PRAYERS.forEach(prayer => {
+                    const input = document.getElementById(`${prayer}Time`);
+                    if (input && input.value === currentTime) {
+                        const t = TRANSLATIONS[currentLang];
+                        showNotification(`🕌 ${t[prayer]} Time!`, `${t.in} ${t[prayer]}...`);
+                    }
+                });
+            }, 60000);
+        }
+
+        // ==================== PERSONAL NOTES & REMINDERS ====================
+
+        let personalNotes = JSON.parse(localStorage.getItem('ramadanNotes') || '[]');
+
+        function addNote() {
+            const textInput = document.getElementById('noteTextInput');
+            const timeInput = document.getElementById('noteTimeInput');
+
+            if (!textInput.value) {
+                alert('Please enter a note!');
+                return;
+            }
+
+            const newNote = {
+                id: Date.now(),
+                text: textInput.value,
+                time: timeInput.value || null,
+                notified: false
+            };
+
+            personalNotes.push(newNote);
+            saveNotes();
+            renderNotes();
+
+            textInput.value = '';
+            timeInput.value = '';
+        }
+
+        function saveNotes() {
+            localStorage.setItem('ramadanNotes', JSON.stringify(personalNotes));
+        }
+
+        function deleteNote(id) {
+            personalNotes = personalNotes.filter(note => note.id !== id);
+            saveNotes();
+            renderNotes();
+        }
+
+        function renderNotes() {
+            const list = document.getElementById('notesList');
+            if (!list) return;
+            list.innerHTML = '';
+
+            if (personalNotes.length === 0) {
+                const t = TRANSLATIONS[currentLang];
+                list.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">${t.noNotes}</p>`;
+                return;
+            }
+
+            // Sort notes: those with time first (sorted by time), then those without time
+            const sortedNotes = [...personalNotes].sort((a, b) => {
+                if (a.time && !b.time) return -1;
+                if (!a.time && b.time) return 1;
+                if (a.time && b.time) return a.time.localeCompare(b.time);
+                return b.id - a.id; // Recent first if no time
+            });
+
+            sortedNotes.forEach(note => {
+                const noteEl = document.createElement('div');
+                noteEl.className = 'note-item';
+
+                const timeTag = note.time ? `
+                    <div class="note-time-tag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        ${formatTime(note.time)}
+                    </div>
+                ` : '';
+
+                noteEl.innerHTML = `
+                    <div class="note-content">
+                        <div class="note-text">${note.text}</div>
+                        ${timeTag}
+                    </div>
+                    <button class="delete-note-btn" onclick="deleteNote(${note.id})" title="Delete Note">×</button>
+                `;
+                list.appendChild(noteEl);
+            });
+        }
+
+        function checkNoteReminders() {
+            if (localStorage.getItem('ramadanNotificationsEnabled') !== 'true') return;
+
+            const now = new Date();
+            const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            let changed = false;
+            personalNotes.forEach(note => {
+                if (note.time === currentTime && !note.notified) {
+                    showNotification('📝 Reminder', note.text);
+                    note.notified = true;
+                    changed = true;
+                } else if (note.time !== currentTime && note.notified) {
+                    // Reset notified flag once time has passed so it can fire tomorrow
+                    note.notified = false;
+                    changed = true;
+                }
+            });
+
+            if (changed) {
+                saveNotes();
+            }
+        }
+
+
+        // ==================== INITIALIZATION ====================
+
+        // Initialize
+        createStars();
+        setLanguage(currentLang); // Use setLanguage for initial setup
+        loadNotificationSettings();
+
+        // Load saved method
+        const savedMethod = localStorage.getItem('prayerMethod');
+        if (savedMethod) {
+            const methodEl = document.getElementById('calcMethod');
+            if (methodEl) methodEl.value = savedMethod;
+        }
+
+        const savedMadhab = localStorage.getItem('asrMadhab');
+        if (savedMadhab) {
+            const madhabEl = document.getElementById('asrMadhab');
+            if (madhabEl) madhabEl.value = savedMadhab;
+        }
+
+        loadPrayerTimes();
+        updateNextPrayer();
+        displayAyah(0);
+        setupPrayerNotifications();
+        renderNotes();
+
+        // Initialize reminders if enabled
+        if (localStorage.getItem('ramadanNotificationsEnabled') === 'true') {
+            setupAllReminders();
+        }
+
+        // Check reminders every minute
+        setInterval(() => {
+            updateNextPrayer();
+            checkNoteReminders();
+        }, 60000);
+
+        // Register Service Worker for PWA (Android Support)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
