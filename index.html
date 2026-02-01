@@ -2110,31 +2110,18 @@
                 mainSubtitle: "دليلك الروحي اليومي",
                     dayLabel: "يوم رمضان",
                         dayOf30: "من ٣٠ يوماً",
-                            notRamadan: "يبدأ رمضان خلال",
-                                browseDuas: "تصفح الأدعية أدناه ⬇️",
-                                    days: "يوم",
-                                        progress: "تقدم رمضان",
-                                            duaForDay: "دعاء اليوم",
-                                                prevDay: "اليوم السابق →",
-                                                    today: "📅 اليوم",
-                                                        nextDay: "← اليوم التالي",
-                                                            notifTitle: "🔔 تذكيرات يومية",
-                                                                remindAt: "ذكرني في الساعة:",
-                                                                    save: "حفظ",
-                                                                        prayerTimes: "🕌 مواقيت الصلاة",
-                                                                            nextPrayer: "الصلاة القادمة",
-                                                                                savePrayers: "💾 حفظ مواقيت الصلاة",
-                                                                                    notes: "📝 ملاحظات وتذكيرات شخصية",
-                                                                                        notePlaceholder: "أدخل ملاحظتك (مثلاً: قراءة سورة الكهف)",
-                                                                                            addNote: "إضافة ملاحظة",
-                                                                                                quran: "📖 آيات قرآنية يومية",
-                                                                                                    fullQuran: "📖 المصحف الكامل",
-                                                                                                        home: "🏠 الرئيسية",
-                                                                                                            prev: "السابق →",
-                                                                                                                next: "← التالي",
-                                                                                                                    footerMubarak: "رمضان مبارك! 🤲",
-                                                                                                                        footerMadeWith: "صنع بقلب ❤️ من أجلك",
-                                                                                                                            noNotes: "لا توجد ملاحظات بعد. أضف واحدة أعلاه! ✨",
+                            savePrayers: "💾 حفظ مواقيت الصلاة",
+                                notes: "📝 ملاحظات وتذكيرات شخصية",
+                                    notePlaceholder: "أدخل ملاحظتك (مثلاً: قراءة سورة الكهف)",
+                                        addNote: "إضافة ملاحظة",
+                                            quran: "📖 آيات قرآنية يومية",
+                                                fullQuran: "📖 المصحف الكامل",
+                                                    home: "🏠 الرئيسية",
+                                                        prev: "السابق →",
+                                                            next: "← التالي",
+                                                                footerMubarak: "رمضان مبارك! 🤲",
+                                                                    footerMadeWith: "صنع بقلب ❤️ من أجلك",
+                                                                        noNotes: "لا توجد ملاحظات بعد. أضف واحدة أعلاه! ✨",
                 in: "خلال",
                 hours: "س",
                     minutes: "د",
@@ -2471,12 +2458,15 @@
                     <div class="dua-slide" id="dua-slide-${index + 1}">
                         <div class="dua-header">
                             <span class="dua-title">✨ ${currentLang === 'ar' ? 'دعاء' : 'Supplication'} ${index + 1}</span>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="speak-btn" onclick="speakDua(${index + 1})" id="speakBtn-${index + 1}" title="Read Aloud">
-                                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
+                                <button class="lang-btn" onclick="showAllDuasModal()" style="font-size: 0.7rem; padding: 4px 8px;">
+                                    ${t.browseAll}
                                 </button>
-                                <button class="fullscreen-btn" onclick="openFullScreen('dua', null, ${index + 1})" title="Full Screen">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                                <button class="speak-btn" onclick="speakDua(${index + 1})" id="speakBtn-${index + 1}" style="width: 35px; height: 35px;" title="Read Aloud">
+                                    <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                </button>
+                                <button class="fullscreen-btn" onclick="openFullScreen('dua', null, ${index + 1})" style="width: 35px; height: 35px;" title="Full Screen">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
                                 </button>
                             </div>
                         </div>
@@ -2716,7 +2706,37 @@
             } else {
                 currentViewDay = 1;
             }
-            updateAll();
+            updateUI();
+        }
+
+        // List View Modal
+        function showAllDuasModal() {
+            const overlay = document.getElementById('fullscreenOverlay');
+            const content = document.getElementById('fullscreenContent');
+            const t = TRANSLATIONS[currentLang];
+
+            let html = `<h2 style="color: var(--gold); margin-bottom: 20px;">${t.browseAll}</h2>`;
+            html += `<div style="display: grid; gap: 15px;">`;
+
+            ALL_DUAS.forEach((dua, idx) => {
+                html += `
+                    <div onclick="jumpToDua(${idx + 1})" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; cursor: pointer; border: 1px solid rgba(255,215,0,0.1); transition: 0.3s;" onmouseover="this.style.borderColor='var(--gold) '" onmouseout="this.style.borderColor='rgba(255,215,0,0.1)'">
+                        <div style="color: var(--gold); font-weight: 700; margin-bottom: 5px;">${currentLang === 'ar' ? 'دعاء' : 'Dua'} ${idx + 1}</div>
+                        <div style="font-family: 'Amiri', serif; font-size: 1.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl;">${dua.arabic}</div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            content.innerHTML = html;
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.classList.add('active'), 10);
+        }
+
+        function jumpToDua(day) {
+            currentViewDay = day;
+            closeFullScreen();
+            updateUI();
         }
 
         function updateNavButtons() {
