@@ -1817,143 +1817,362 @@
         const RAMADAN_START_2026 = new Date('2026-02-17');
         const RAMADAN_START_2027 = new Date('2027-02-06');
 
-        const TRANSLATIONS = {
-            en: {
-                mainTitle: "🌙 Ramadan Companion",
-                mainSubtitle: "Your daily spiritual guide",
-                dayLabel: "Day of Ramadan",
-                dayOf30: "of 30 days",
-                notRamadan: "Ramadan begins in",
-                browseDuas: "Browse the duas below ⬇️",
-                days: "days",
-                progress: "Ramadan Progress",
-                duaForDay: "Dua for Day",
-                prevDay: "← Previous Day",
-                today: "📅 Today",
-                nextDay: "Next Day →",
-                notifTitle: "🔔 Daily Reminders",
-                remindAt: "Remind me at:",
-                save: "Save",
-                prayerTimes: "🕌 Prayer Times",
-                nextPrayer: "Next Prayer",
-                savePrayers: "💾 Save Prayer Times",
-                notes: "📝 Personal Notes & Reminders",
-                notePlaceholder: "Enter your note (e.g., Read Surah Kahf)",
-                addNote: "Add Note",
-                quran: "📖 Daily Quran Ayahs",
-                fullQuran: "📖 Full Quran",
-                home: "🏠 Home",
-                prev: "← Previous",
-                next: "Next →",
-                footerMubarak: "Ramadan Mubarak! 🤲",
-                footerMadeWith: "Made with ❤️ for you",
-                noNotes: "No notes yet. Add one above! ✨",
-                in: "in",
-                hours: "h",
-                minutes: "m",
-                minutesFull: "minutes",
-                fajr: "Fajr",
-                dhuhr: "Dhuhr",
-                asr: "Asr",
-                maghrib: "Maghrib",
-                isha: "Isha",
-                recipes: "🍳 Recipes",
-                recipesTitle: "🍳 Ramadan Kitchen",
-                recipesSubtitle: "Authentic Middle Eastern flavors for your Ramadan.",
-                breakfast: "Breakfast (Suhoor)",
-                lunch: "Iftar (Main Dish)",
-                dinner: "Dinner",
-                dessert: "Dessert",
-                notifEnabled: "✅ Notifications enabled! Set your reminder time.",
-                notifUnsupported: "❌ Your browser doesn't support notifications.",
-                notifDenied: "❌ Please allow notifications in your browser settings.",
-                reminderSet: "✅ Reminder set for",
-                detectLoc: "Detect Location",
-                detecting: "Detecting...",
-                locSuccess: "Location detected: ",
-                locError: "Error detecting location. Try again.",
-                geoDenied: "Please allow location access.",
-                timesUpdated: "Prayer times updated!",
-                method: "Calculation Method:",
-                madhab: "Asr Method (Madhab):",
-
-                sadaqahTitle: "💝 Sadaqah Planner",
-                sadaqahSubtitle: "Enter your age for personalized charity ideas.",
-                sadaqahBtn: "Get Recommendations",
-                agePlaceholder: "Your Age",
-                sadaqahKids: ["Smile at everyone you meet today", "Help set up the Iftar table with dates", "Feed a stray cat or bird", "Be extra kind to your siblings", "Make a hand-made Ramadan card for your teacher", "Tidy up your toys without being asked", "Help your parents prepare a simple dish", "Share your favorite snack with a friend", "Say 'Thank you' and 'Jazakallah' to everyone", "Read a short story about the Prophets", "Give one of your toys to a younger child", "Help clear the table after Iftar", "Water the plants in your house", "Make a drawing for your grandparents", "Help your mom bake something sweet"],
-                sadaqahTeens: ["Volunteer at a local food bank", "Prepare a special dish for neighbors", "Teach someone a verse of Quran", "Set up the prayer corner at home", "Distribute water bottles at the Masjid during Tarawih", "Write a blog post or social media post about Ramadan", "Organize a small donation drive among friends", "Help your younger siblings with their studies", "Prepare an info sheet about Ramadan for non-Muslim friends", "Offer to do the grocery shopping for an elderly neighbor", "Lead a short discussion after Iftar about a Hadith", "Visit a local hospital or nursing home", "Help clean the Masjid prayer area", "Host a 'virtue of the night' talk with friends", "Donate a book to a community library"],
-                sadaqahAdults: ["Setup a recurring charity donation", "Pay Zakat-ul-Fitr early for your family", "Host an Iftar for someone in need", "Sponsor a water well in a developing country", "Donate your professional skills to a charity for free", "Buy a meal for a homeless person", "Gift a Quran translation to a colleague", "Offer a ride to someone going to the Masjid", "Support a local community project", "Pay off a small debt for a friend in hardship", "Provide dates and water for a public Iftar", "Mentor a young person in your field", "Help a family in your community with their house bills", "Donate blood if you are healthy", "Clean a public space or park in your neighborhood"],
-                sadaqahSeniors: ["Share stories of faith with grandchildren", "Call a relative you haven't spoken to in a long time", "Sponsor an Iftar for an orphan", "Write down your life lessons and wisdom for your family", "Gift your favorite Islamic books to a student", "Teach a child how to perform Wudu correctly", "Sew or mend clothes for those in need", "Donate to an Islamic education center", "Host a small Halaqa (gathering) for neighbors", "Share home-cooked meals with your community", "Offer advice to young couples or parents", "Support a local garden or green space", "Donate hand-crafted items to a charity auction", "Pray for the entire Ummah during the last ten nights", "Gift prayer beads or a prayer mat to a new Muslim"]
+        // Expanded Library of 50 Authentic Duas
+        const ALL_DUAS = [
+            {
+                arabic: "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ",
+                transliteration: "Dhahaba al-zam'u wa'btallat al-'uruqu wa thabata al-ajru in sha' Allah",
+                english: "Thirst is gone, the veins are moistened, and the reward is certain if Allah wills."
             },
-            ar: {
-                mainTitle: "🌙 رفيق رمضان",
+            {
+                arabic: "اللَّهُمَّ إِنَّكَ عُفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
+                transliteration: "Allahumma innaka 'afuwwun tuhibbul-'afwa fa'fu 'anni",
+                english: "O Allah, You are Most Forgiving and You love forgiveness, so forgive me."
+            },
+            {
+                arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+                transliteration: "Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan waqina 'adhaban-nar",
+                english: "Our Lord, give us in this world that which is good and in the Hereafter that which is good and protect us from the punishment of the Fire."
+            },
+            {
+                arabic: "اللهم إني أسألك الهدى والتقى والعفاف والغنى",
+                transliteration: "Allahumma inni as'alukal-huda wat-tuqa wal-'afafa wal-ghina",
+                english: "O Allah, I ask You for guidance, piety, chastity, and self-sufficiency."
+            },
+            {
+                arabic: "يا مقلب القلوب ثبت قلبي على دينك",
+                transliteration: "Ya Muqallibal-qulubi thabbit qalbi 'ala dinik",
+                english: "O Turner of the hearts, keep my heart firm upon Your religion."
+            },
+            {
+                arabic: "اللهم إني أعوذ بك من العجز والكسل والجبن والبخل وهرم وعذاب القبر",
+                transliteration: "Allahumma inni a'udhu bika minal-'ajzi wal-kasali wal-jubni wal-bukhli wal-harami wa 'adhabil-qabr",
+                english: "O Allah, I seek refuge in You from helplessness, laziness, cowardice, miserliness, senility, and the punishment of the grave."
+            },
+            {
+                arabic: "اللهم إني أعوذ بك من علم لا ينفع، ومن قلب لا يخشع، ومن نفس لا تشبع، ومن دعوة لا يستجاب لها",
+                transliteration: "Allahumma inni a'udhu bika min 'ilmin la yanfa', wa min qalbin la yakhsha', wa min nafsin la tashba', wa min da'watin la yustajabu laha",
+                english: "O Allah, I seek refuge in You from knowledge that does not benefit, from a heart that does not fear You, from a soul that is never satisfied, and from a supplication that is not answered."
+            },
+            {
+                arabic: "اللَّهُمَّ بَارِكْ لَنَا فِي رَجَبٍ وَشَعْبَانَ وَبَلِّغْنَا رَمَضَانَ",
+                transliteration: "Allahumma barik lana fi Rajaba wa Sha'bana wa ballighna Ramadana",
+                english: "O Allah, bless us in Rajab and Sha'ban and allow us to reach Ramadan."
+            },
+            {
+                arabic: "اللَّهُمَّ اغْفِرْ لِي ذَنْبِي كُلَّهُ دِقَّهُ وَجِلَّهُ وَأَوَّلَهُ وَآخِرَهُ وَعَلانِيَتَهُ وَسِرَّهُ",
+                transliteration: "Allahumma-ghfir li dhanbi kullahu, diqqahu wa jillahu, wa awwalahu wa akhirahu, wa 'alaniyatahu wa sirrahu",
+                english: "O Allah, forgive all my sins: the small and the great, the first and the last, the public and the private."
+            },
+            {
+                arabic: "اللهم إني أسألك الجنة وأعوذ بك من النار",
+                transliteration: "Allahumma inni as'alukal-jannata wa a'udhu bika minan-nar",
+                english: "O Allah, I ask You for Paradise and seek refuge in You from the Fire."
+            },
+            {
+                arabic: "رَبِّ اجْعَلْنِي مُقِيمَ الصَّلَاةِ وَمِن ذُرِّيَّتِي رَبَّنَا وَتَقَبَّلْ دُعَاءِ",
+                transliteration: "Rabbi-j'alni muqimas-salati wa min dhurriyyati Rabbana wa taqabbal du'a'",
+                english: "My Lord, make me an establisher of prayer, and from my descendants. Our Lord, and accept my supplication."
+            },
+            {
+                arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ ، سُبْحَانَ اللَّهِ الْعَظِيمِ",
+                transliteration: "Subhan-Allahi wa bihamdihi, Subhan-Allahil-Azim",
+                english: "Glory be to Allah and His is the praise, Glory be to Allah the Greatest."
+            },
+            {
+                arabic: "اللهم أنت ربي لا إله إلا أنت خلقتني وأنا عبدك وأنا على عهدك ووعدك ما استطعت",
+                transliteration: "Allahumma Anta Rabbi la ilaha illa Anta, khalaqtani wa ana 'abduka, wa ana 'ala 'ahdika wa wa'dika ma-stata'tu",
+                english: "O Allah, You are my Lord, none has the right to be worshipped but You. You created me and I am Your slave, and I am faithful to my covenant and my promise as much as I can."
+            },
+            {
+                arabic: "اللهم إني أسألك العفو والعافية في الدنيا والآخرة",
+                transliteration: "Allahumma inni as'alukal-'afwa wal-'afiyah fid-dunya wal-akhirah",
+                english: "O Allah, I ask You for forgiveness and well-being in this world and the Hereafter."
+            },
+            {
+                arabic: "اللهم مصرف القلوب صرف قلوبنا على طاعتك",
+                transliteration: "Allahumma musarrifal-qulubi sarrif qulubana 'ala ta'atik",
+                english: "O Allah, Turner of the hearts, turn our hearts to Your obedience."
+            },
+            {
+                arabic: "اللهم إني أعوذ بك من زوال نعمتك، وتحول عافيتك، وفجاءة نقمتك، وجميع سخطك",
+                transliteration: "Allahumma inni a'udhu bika min zawali ni'matik, wa tahawwuli 'afiyatik, wa fuja'ati niqmatik, wa jami'i sakhatik",
+                english: "O Allah, I seek refuge in You from the withdrawal of Your blessing, the change of Your protection, the suddenness of Your punishment, and all Your displeasure."
+            },
+            {
+                arabic: "اللهم اكفني بحلالك عن حرامك، وأغنني بفضلك عمن سواك",
+                transliteration: "Allahumma-kfi ni bi-halalika 'an haramika, wa aghnini bi-fadlika 'amman siwaka",
+                english: "O Allah, suffice me with what You have allowed instead of what You have forbidden, and make me independent of all others besides You."
+            },
+            {
+                arabic: "رب اغفر لي وتب علي إنك أنت التواب الرحيم",
+                transliteration: "Rabbi-ghfir li wa tub 'alayya innaka Antat-Tawwabur-Rahim",
+                english: "My Lord, forgive me and accept my repentance, for You are the Accepter of Repentance, the Merciful."
+            },
+            {
+                arabic: "اللهم إني أسألك علماً نافعاً، ورزقاً طيباً، وعملاً متقبلاً",
+                transliteration: "Allahumma inni as'aluka 'ilman nafi'an, wa rizqan tayyiban, wa 'amalan mutaqabbalan",
+                english: "O Allah, I ask You for beneficial knowledge, goodly provision, and acceptable deeds."
+            },
+            {
+                arabic: "اللهم أعني على ذكرك وشكرك وحسن عبادتك",
+                transliteration: "Allahumma a'inni 'ala dhikrika wa shukrika wa husni 'ibadatik",
+                english: "O Allah, help me to remember You, give thanks to You, and worship You in the best way."
+            },
+            {
+                arabic: "اللهم آت نفسي تقواها وزكها أنت خير من زكاها أنت وليها ومولاها",
+                transliteration: "Allahumma ati nafsi taqwaha wa zakkiha Anta khayru man zakkaha Anta Waliyyuha wa Mawlaha",
+                english: "O Allah, grant my soul its piety and purify it, for You are the Best of those who purify it. You are its Guardian and its Protector."
+            },
+            {
+                arabic: "اللهم إني أعوذ بك من الهم والحزن، والعجز والكسل، والبخل والجبن، وضلع الدين، وغلبة الرجال",
+                transliteration: "Allahumma inni a'udhu bika minal-hammi wal-hazani, wal-'ajzi wal-kasali, wal-bukhli wal-jubni, wa dala'id-dayni wa ghalabatir-rijal",
+                english: "O Allah, I seek refuge in You from anxiety and sorrow, from helplessness and laziness, from miserliness and cowardice, from the burden of debt and from being overpowered by men."
+            },
+            {
+                arabic: "لا إله إلا أنت سبحانك إني كنت من الظالمين",
+                transliteration: "La ilaha illa Anta Subhanaka inni kuntu minaz-zalimin",
+                english: "There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers."
+            },
+            {
+                arabic: "اللهم حبب إلينا الإيمان وزينه في قلوبنا، وكره إلينا الكفر والفسوق والعصيان",
+                transliteration: "Allahumma habbib ilaynal-imana wa zayyinhu fi qulubina, wa karrih ilaynal-kufra wal-fusuga wal-'isyan",
+                english: "O Allah, make faith dear to us and beautify it in our hearts, and make disbelief, wickedness, and disobedience hateful to us."
+            },
+            {
+                arabic: "اللهم إني أسألك الثبات في الأمر، والعزيمة على الرشد",
+                transliteration: "Allahumma inni as'alukat-thubata fil-amri, wal-'azimata 'alar-rushd",
+                english: "O Allah, I ask You for steadfastness in the matter and determination upon the right path."
+            },
+            {
+                arabic: "اللهم اجعل في قلبي نوراً، وفي بصري نوراً، وفي سمعي نوراً، وعن يميني نوراً، وعن يساري نوراً",
+                transliteration: "Allahumma-j'al fi qalbi nuran, wa fi basari nuran, wa fi sam'i nuran, wa 'an yamini nuran, wa 'an yasari nuran",
+                english: "O Allah, place light in my heart, light in my sight, light in my hearing, light on my right, and light on my left."
+            },
+            {
+                arabic: "اللهم إني أعوذ بك من عذاب النار وعذاب القبر وفتنة المحيا والممات وفتنة المسيح الدجال",
+                transliteration: "Allahumma inni a'udhu bika min 'adhabin-nari wa 'adhabil-qabri wa fitnatil-mahya wal-mamati wa fitnatil-masihid-dajjal",
+                english: "O Allah, I seek refuge in You from the punishment of the Fire, the punishment of the grave, the trials of life and death, and the trial of the False Messiah."
+            },
+            {
+                arabic: "اللهم إني أسألك من فضلك ورحمتك، فإنه لا يملكها إلا أنت",
+                transliteration: "Allahumma inni as'aluka min fadlika wa rahmatika, fa-innahu la yamlikuha illa Anta",
+                english: "O Allah, I ask You of Your grace and Your mercy, for indeed no one possesses them except You."
+            },
+            {
+                arabic: "اللهم رب جبريل وميكائيل وإسرافيل، فاطر السماوات والأرض، عالم الغيب والشهادة",
+                transliteration: "Allahumma Rabba Jibra'ila wa Mika'ila wa Israfila, Fatiras-samawati wal-ardi, 'Alimal-ghaybi wash-shahadah",
+                english: "O Allah, Lord of Jibril, Mikhail, and Israfil, Creator of the heavens and the earth, Knower of the unseen and the seen."
+            },
+            {
+                arabic: "يا حي يا قيوم برحمتك أستغيث أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين",
+                transliteration: "Ya Hayyu Ya Qayyumu bi-rahmatika astaghith, aslih li sha'ni kullahu wa la takilni ila nafsi tarfata 'ayn",
+                english: "O Ever-Living, O Sustainer, by Your mercy I seek help. Set right all my affairs and do not leave me to myself even for a blink of an eye."
+            },
+            {
+                arabic: "اللهم إني أسألك خير المسألة وخير الدعاء وخير النجاح وخير العمل وخير الثواب",
+                transliteration: "Allahumma inni as'aluka khayral-mas'alati wa khayrad-du'a'i wa khayran-najahi wa khayral-'amali wa khayrat-thawab",
+                english: "O Allah, I ask You for the best of requests, the best supplication, the best success, the best action, and the best reward."
+            },
+            {
+                arabic: "حسبي الله لا إله إلا هو عليه توكلت وهو رب العرش العظيم",
+                transliteration: "Hasbiy-Allahu la ilaha illa Huwa 'alayhi tawakkaltu wa Huwa Rabbul-'Arshil-'Azim",
+                english: "Allah is sufficient for me; there is no deity except Him. Upon Him I have relied, and He is the Lord of the Great Throne."
+            },
+            {
+                arabic: "يا ذا الجلال والإكرام",
+                transliteration: "Ya Dhal-Jalali wal-Ikram",
+                english: "O Possessor of Majesty and Honor."
+            },
+            {
+                arabic: "اللهم اغفر لحينا وميتنا وشاهدنا وغائبنا وصغيرنا وكبيرنا وذكرنا وأنثانا",
+                transliteration: "Allahumma-ghfir li hayyina wa mayyitina wa shahidina wa gha'ibina wa saghirina wa kabirina wa dhakarina wa unthana",
+                english: "O Allah, forgive our living and our dead, those present and those absent, our young and our old, our males and our females."
+            },
+            {
+                arabic: "اللهم إني أسألك أن تبارك لي في نفسي، وفي سمعي، وفي بصري، وفي روحي، وفي خلقي",
+                transliteration: "Allahumma inni as'aluka an tubarika li fi nafsi, wa fi sam'i, wa fi basari, wa fi ruhi, wa fi khulqi",
+                english: "O Allah, I ask You to bless me in myself, in my hearing, in my sight, in my soul, and in my character."
+            },
+            {
+                arabic: "اللهم إني أعوذ برضاك من سخطك، وبمعافاتك من عقوبتك",
+                transliteration: "Allahumma inni a'udhu bi-ridaka min sakhatika, wa bi-mu'afatika min 'uqubatika",
+                english: "O Allah, I seek refuge in Your pleasure from Your wrath, and in Your forgiveness from Your punishment."
+            },
+            {
+                arabic: "اللهم أنت السلام ومنك السلام تباركت يا ذا الجلال والإكرام",
+                transliteration: "Allahumma Antas-Salamu wa minkas-salam, tabarakta ya Dhal-Jalali wal-Ikram",
+                english: "O Allah, You are Peace and from You comes peace. Blessed are You, O Possessor of Majesty and Honor."
+            },
+            {
+                arabic: "اللهم لك الحمد كله، اللهم لا قابض لما بسطت، ولا باسط لما قبضت",
+                transliteration: "Allahumma lakal-hamdu kullu-hu, Allahumma la qabida lima basatta, wa la basita lima qabadta",
+                english: "O Allah, all praise is for You. O Allah, there is no withholder of what You spread, and no spreader of what You withhold."
+            },
+            {
+                arabic: "اللهم إني أعوذ بك من شر ما عملت، ومن شر ما لم أعمل",
+                transliteration: "Allahumma inni a'udhu bika min sharri ma 'amiltu, wa min sharri ma lam a'mal",
+                english: "O Allah, I seek refuge in You from the evil of what I have done and from the evil of what I have not yet done."
+            },
+            {
+                arabic: "اللهم اهدني فيمن هديت، وعافني فيمن عافيت، وتولني فيمن توليت",
+                transliteration: "Allahumma-hdini fiman hadayt, wa 'afini fiman 'afayt, wa tawallani fiman tawallayt",
+                english: "O Allah, guide me among those You have guided, grant me well-being among those You have granted well-being, and protect me among those You have protected."
+            },
+            {
+                arabic: "اللهم بارك لي فيما أعطيت، وقني شر ما قضيت",
+                transliteration: "Allahumma barik li fima a'tayt, wa qini sharra ma qadayt",
+                english: "O Allah, bless me in what You have given, and protect me from the evil of what You have decreed."
+            },
+            {
+                arabic: "ربنا لا تؤاخذنا إن نسينا أو أخطأنا",
+                transliteration: "Rabbana la tu'akhidhna in-nasina aw akhta'na",
+                english: "Our Lord, do not impose blame upon us if we have forgotten or erred."
+            },
+            {
+                arabic: "اللهم إني أسألك إيماناً لا يرتد، ونعيماً لا ينفد",
+                transliteration: "Allahumma inni as'aluka imanan la yartaddu, wa na'iman la yanfadu",
+                english: "O Allah, I ask You for faith that does not waver and bliss that does not end."
+            },
+            {
+                arabic: "اللهم إني أسألك الجنة، وأستجير بك من النار",
+                transliteration: "Allahumma inni as'alukal-jannata, wa astajiru bika minan-nari",
+                english: "O Allah, I ask You for Paradise and I seek refuge in You from the Fire."
+            },
+            {
+                arabic: "اللهم إني أسألك حسن الخاتمة",
+                transliteration: "Allahumma inni as'aluka husnal-khatimah",
+                english: "O Allah, I ask You for a good end (to my life)."
+            },
+            {
+                arabic: "اللهم ارزقني توبة قبل الموت",
+                transliteration: "Allahumma-rzuqni tawbatan qablal-mawt",
+                english: "O Allah, grant me repentance before death."
+            },
+            {
+                arabic: "اللهم ثبتني عند السؤال",
+                transliteration: "Allahumma thabbitni 'indas-su'al",
+                english: "O Allah, keep me firm during the questioning (in the grave)."
+            },
+            {
+                arabic: "اللهم انفعني بما علمتني، وعلمني ما ينفعني، وزدني علماً",
+                transliteration: "Allahumma-nfa'ni bima 'allamtani, wa 'allimni ma yanfa'uni, wa zidni 'ilman",
+                english: "O Allah, benefit me with what You have taught me, teach me what will benefit me, and increase me in knowledge."
+            },
+            {
+                arabic: "اللهم أعني على ذكرك وشكرك وحسن عبادتك",
+                transliteration: "Allahumma a'inni 'ala dhikrika wa shukrika wa husni 'ibadatik",
+                english: "O Allah, help me to remember You, to thank You, and to worship You in the best way."
+            },
+            {
+                arabic: "اللهم إني أسألك الجنة بغير حساب",
+                transliteration: "Allahumma inni as'alukal-jannata bighayri hisab",
+                english: "O Allah, I ask You for Paradise without account."
+            }
+        ];
+        minutes: "m",
+            minutesFull: "minutes",
+                fajr: "Fajr",
+                    dhuhr: "Dhuhr",
+                        asr: "Asr",
+                            isha: "Isha",
+                                recipes: "🍳 Recipes",
+                                    recipesTitle: "🍳 Ramadan Kitchen",
+                                        recipesSubtitle: "Authentic Middle Eastern flavors for your Ramadan.",
+                                            breakfast: "Breakfast (Suhoor)",
+                                                lunch: "Iftar (Main Dish)",
+                                                    dinner: "Dinner",
+                                                        dessert: "Dessert",
+                                                            notifEnabled: "✅ Notifications enabled! Set your reminder time.",
+                                                                notifUnsupported: "❌ Your browser doesn't support notifications.",
+                                                                    notifDenied: "❌ Please allow notifications in your browser settings.",
+                                                                        reminderSet: "✅ Reminder set for",
+                                                                            detectLoc: "Detect Location",
+                                                                                detecting: "Detecting...",
+                                                                                    locSuccess: "Location detected: ",
+                                                                                        locError: "Error detecting location. Try again.",
+                                                                                            geoDenied: "Please allow location access.",
+                                                                                                timesUpdated: "Prayer times updated!",
+                                                                                                    method: "Calculation Method:",
+                                                                                                        madhab: "Asr Method (Madhab):",
+
+                                                                                                            sadaqahTitle: "💝 Sadaqah Planner",
+                                                                                                                sadaqahSubtitle: "Enter your age for personalized charity ideas.",
+                                                                                                                    sadaqahBtn: "Get Recommendations",
+                                                                                                                        agePlaceholder: "Your Age",
+                                                                                                                            sadaqahKids: ["Smile at everyone you meet today", "Help set up the Iftar table with dates", "Feed a stray cat or bird", "Be extra kind to your siblings", "Make a hand-made Ramadan card for your teacher", "Tidy up your toys without being asked", "Help your parents prepare a simple dish", "Share your favorite snack with a friend", "Say 'Thank you' and 'Jazakallah' to everyone", "Read a short story about the Prophets", "Give one of your toys to a younger child", "Help clear the table after Iftar", "Water the plants in your house", "Make a drawing for your grandparents", "Help your mom bake something sweet"],
+                                                                                                                                sadaqahTeens: ["Volunteer at a local food bank", "Prepare a special dish for neighbors", "Teach someone a verse of Quran", "Set up the prayer corner at home", "Distribute water bottles at the Masjid during Tarawih", "Write a blog post or social media post about Ramadan", "Organize a small donation drive among friends", "Help your younger siblings with their studies", "Prepare an info sheet about Ramadan for non-Muslim friends", "Offer to do the grocery shopping for an elderly neighbor", "Lead a short discussion after Iftar about a Hadith", "Visit a local hospital or nursing home", "Help clean the Masjid prayer area", "Host a 'virtue of the night' talk with friends", "Donate a book to a community library"],
+                                                                                                                                    sadaqahAdults: ["Setup a recurring charity donation", "Pay Zakat-ul-Fitr early for your family", "Host an Iftar for someone in need", "Sponsor a water well in a developing country", "Donate your professional skills to a charity for free", "Buy a meal for a homeless person", "Gift a Quran translation to a colleague", "Offer a ride to someone going to the Masjid", "Support a local community project", "Pay off a small debt for a friend in hardship", "Provide dates and water for a public Iftar", "Mentor a young person in your field", "Help a family in your community with their house bills", "Donate blood if you are healthy", "Clean a public space or park in your neighborhood"],
+                                                                                                                                        sadaqahSeniors: ["Share stories of faith with grandchildren", "Call a relative you haven't spoken to in a long time", "Sponsor an Iftar for an orphan", "Write down your life lessons and wisdom for your family", "Gift your favorite Islamic books to a student", "Teach a child how to perform Wudu correctly", "Sew or mend clothes for those in need", "Donate to an Islamic education center", "Host a small Halaqa (gathering) for neighbors", "Share home-cooked meals with your community", "Offer advice to young couples or parents", "Support a local garden or green space", "Donate hand-crafted items to a charity auction", "Pray for the entire Ummah during the last ten nights", "Gift prayer beads or a prayer mat to a new Muslim"]
+            },
+        ar: {
+            mainTitle: "🌙 رفيق رمضان",
                 mainSubtitle: "دليلك الروحي اليومي",
-                dayLabel: "يوم رمضان",
-                dayOf30: "من ٣٠ يوماً",
-                notRamadan: "يبدأ رمضان خلال",
-                browseDuas: "تصفح الأدعية أدناه ⬇️",
-                days: "يوم",
-                progress: "تقدم رمضان",
-                duaForDay: "دعاء اليوم",
-                prevDay: "اليوم السابق →",
-                today: "📅 اليوم",
-                nextDay: "← اليوم التالي",
-                notifTitle: "🔔 تذكيرات يومية",
-                remindAt: "ذكرني في الساعة:",
-                save: "حفظ",
-                prayerTimes: "🕌 مواقيت الصلاة",
-                nextPrayer: "الصلاة القادمة",
-                savePrayers: "💾 حفظ مواقيت الصلاة",
-                notes: "📝 ملاحظات وتذكيرات شخصية",
-                notePlaceholder: "أدخل ملاحظتك (مثلاً: قراءة سورة الكهف)",
-                addNote: "إضافة ملاحظة",
-                quran: "📖 آيات قرآنية يومية",
-                fullQuran: "📖 المصحف الكامل",
-                home: "🏠 الرئيسية",
-                prev: "السابق →",
-                next: "← التالي",
-                footerMubarak: "رمضان مبارك! 🤲",
-                footerMadeWith: "صنع بقلب ❤️ من أجلك",
-                noNotes: "لا توجد ملاحظات بعد. أضف واحدة أعلاه! ✨",
+                    dayLabel: "يوم رمضان",
+                        dayOf30: "من ٣٠ يوماً",
+                            notRamadan: "يبدأ رمضان خلال",
+                                browseDuas: "تصفح الأدعية أدناه ⬇️",
+                                    days: "يوم",
+                                        progress: "تقدم رمضان",
+                                            duaForDay: "دعاء اليوم",
+                                                prevDay: "اليوم السابق →",
+                                                    today: "📅 اليوم",
+                                                        nextDay: "← اليوم التالي",
+                                                            notifTitle: "🔔 تذكيرات يومية",
+                                                                remindAt: "ذكرني في الساعة:",
+                                                                    save: "حفظ",
+                                                                        prayerTimes: "🕌 مواقيت الصلاة",
+                                                                            nextPrayer: "الصلاة القادمة",
+                                                                                savePrayers: "💾 حفظ مواقيت الصلاة",
+                                                                                    notes: "📝 ملاحظات وتذكيرات شخصية",
+                                                                                        notePlaceholder: "أدخل ملاحظتك (مثلاً: قراءة سورة الكهف)",
+                                                                                            addNote: "إضافة ملاحظة",
+                                                                                                quran: "📖 آيات قرآنية يومية",
+                                                                                                    fullQuran: "📖 المصحف الكامل",
+                                                                                                        home: "🏠 الرئيسية",
+                                                                                                            prev: "السابق →",
+                                                                                                                next: "← التالي",
+                                                                                                                    footerMubarak: "رمضان مبارك! 🤲",
+                                                                                                                        footerMadeWith: "صنع بقلب ❤️ من أجلك",
+                                                                                                                            noNotes: "لا توجد ملاحظات بعد. أضف واحدة أعلاه! ✨",
                 in: "خلال",
                 hours: "س",
-                minutes: "د",
-                minutesFull: "دقيقة",
-                fajr: "الفجر",
-                dhuhr: "الظهر",
-                asr: "العصر",
-                maghrib: "المغرب",
-                isha: "العشاء",
-                recipes: "🍳 وصفات",
-                recipesTitle: "🍳 مطبخ رمضان",
-                recipesSubtitle: "نكهات شرق أوسطية أصيلة لمائدتكم الرمضانية.",
-                breakfast: "السحور",
-                lunch: "فتحة الصيام (رئيسي)",
-                dinner: "العشاء",
-                dessert: "الحلويات",
-                notifEnabled: "✅ تم تفعيل التنبيهات! حدد وقت التذكير.",
-                notifUnsupported: "❌ متصفحك لا يدعم التنبيهات.",
-                notifDenied: "❌ يرجى السماح بالتنبيهات في إعدادات متصفحك.",
-                reminderSet: "✅ تم ضبط التذكير في الساعة",
-                detectLoc: "تحديد الموقع",
-                detecting: "جاري التحديد...",
-                locSuccess: "تم تحديد الموقع: ",
-                locError: "خطأ في تحديد الموقع. حاول ثانية.",
-                geoDenied: "يرجى السماح بالوصول للموقع.",
-                timesUpdated: "تم تحديث مواقيت الصلاة!",
-                method: "طريقة الحساب:",
-                madhab: "مذهب صلاة العصر:",
+                    minutes: "د",
+                        minutesFull: "دقيقة",
+                            fajr: "الفجر",
+                                dhuhr: "الظهر",
+                                    asr: "العصر",
+                                        maghrib: "المغرب",
+                                            isha: "العشاء",
+                                                recipes: "🍳 وصفات",
+                                                    recipesTitle: "🍳 مطبخ رمضان",
+                                                        recipesSubtitle: "نكهات شرق أوسطية أصيلة لمائدتكم الرمضانية.",
+                                                            breakfast: "السحور",
+                                                                lunch: "فتحة الصيام (رئيسي)",
+                                                                    dinner: "العشاء",
+                                                                        dessert: "الحلويات",
+                                                                            notifEnabled: "✅ تم تفعيل التنبيهات! حدد وقت التذكير.",
+                                                                                notifUnsupported: "❌ متصفحك لا يدعم التنبيهات.",
+                                                                                    notifDenied: "❌ يرجى السماح بالتنبيهات في إعدادات متصفحك.",
+                                                                                        reminderSet: "✅ تم ضبط التذكير في الساعة",
+                                                                                            detectLoc: "تحديد الموقع",
+                                                                                                detecting: "جاري التحديد...",
+                                                                                                    locSuccess: "تم تحديد الموقع: ",
+                                                                                                        locError: "خطأ في تحديد الموقع. حاول ثانية.",
+                                                                                                            geoDenied: "يرجى السماح بالوصول للموقع.",
+                                                                                                                timesUpdated: "تم تحديث مواقيت الصلاة!",
+                                                                                                                    method: "طريقة الحساب:",
+                                                                                                                        madhab: "مذهب صلاة العصر:",
 
-                sadaqahTitle: "💝 مخطط الصدقة",
-                sadaqahSubtitle: "أدخل عمرك للحصول على أفكار صدقة مخصصة.",
-                sadaqahBtn: "احصل على النصائح",
-                agePlaceholder: "عمرك",
-                sadaqahKids: ["ابتسم في وجه كل من تقابله اليوم", "ساعد في تجهيز مائدة الإفطار بالتمر", "أطعم قطة أو طائراً في الشارع", "كن لطيفاً جداً مع إخوتك اليوم", "اصنع بطاقة تهنئة رمضانية لمعلمك", "رتب ألعابك دون أن يطلب منك أحد", "ساعد والديك في تحضير طبق بسيط", "شارك وجبتك الخفيفة المفضلة مع صديق", "قل 'شكراً' و 'جزاك الله خيراً' للجميع", "اقرأ قصة قصيرة عن الأنبياء", "أعطِ إحدى ألعابك لطفل أصغر منك", "ساعد في تنظيف المائدة بعد الإفطار", "اسقِ النباتات في منزلك", "ارسم لوحة جميلة لجديك", "ساعد والدتك في خبز شيء حلو"],
-                sadaqahTeens: ["تطوع في بنك الطعام المحلي", "جهز طبقاً مميزاً للجيران", "علم شخصاً آية من القرآن", "رتب ركناً للصلاة في المنزل", "وزع زجاجات المياه في المسجد أثناء التراويح", "اكتب منشوراً عن فضائل رمضان على وسائل التواصل", "نظم حملة تبرعات صغيرة بين أصدقائك", "ساعد إخوتك الصغار في دروسهم", "جهز معلومات عن رمضان لأصدقائك غير المسلمين", "اعرض الذهاب للتسوق لجار مسن", "قُد نقاشاً قصيراً بعد الإفطار حول حديث شريف", "زر مستشفى محلياً أو داراً للمسنين", "ساعد في تنظيف منطقة الصلاة بالمسجد", "استضف جلسة عن 'فضائل الليل' مع رفاقك", "تبرع بكتاب لمكتبة المجتمع المحلي"],
-                sadaqahAdults: ["قم بإعداد تبرع خيري دوري", "ادفع زكاة الفطر مبكراً عن عائلتك", "استضف مأدبة إفطار لشخص محتاج", "ساهم في حفر بئر مياه في بلد نامٍ", "تبرع بمهاراتك المهنية لجمعية خيرية مجاناً", "اشترِ وجبة لشخص محتاج", "اهدِ ترجمة للقرآن لزميل في العمل", "أوصل شخصاً إلى المسجد بسيارتك", "ادعم مشروعاً مجتمعياً محلياً", "سدد ديناً صغيراً عن صديق غارق في ضائقة", "وفر التمر والماء لإفطار عام", "كن مرشداً لشاب في مجال عملك", "ساعد عائلة في مجتمعك في دفع الفواتير", "تبرع بالدم إذا كنت بصحة جيدة", "نظف مكاناً عاماً أو حديقة في منطقتك"],
-                sadaqahSeniors: ["شارك قصص الإيمان مع أحفادك", "اتصل بقريب لم تتحدث معه منذ فترة طويلة", "كفل إفطار يتيم", "اكتب دروس حياتك وحكمك لعائلتك", "اهدِ كتبك الإسلامية المفضلة لطالب علم", "علم طفلاً كيف يتوضأ بشكل صحيح", "خِط أو أصلح ملابس للمحتاجين", "تبرع لمركز تعليم إسلامي", "استضف حلقة ذكر صغيرة للجيران", "شارك الوجبات المطبوخة في المنزل مع منطقتك", "قدم النصيحة للأزواج الشباب أو الوالدين", "ادعم حديقة محلية أو مساحة خضراء", "تبرع بمشغولات يدوية لمزاد خيري", "ادعُ للأمة الإسلامية جمعاء في العشر الأواخر", "اهدِ سبحة أو سجادة صلاة لمسلم جديد"]
-            }
+                                                                                                                            sadaqahTitle: "💝 مخطط الصدقة",
+                                                                                                                                sadaqahSubtitle: "أدخل عمرك للحصول على أفكار صدقة مخصصة.",
+                                                                                                                                    sadaqahBtn: "احصل على النصائح",
+                                                                                                                                        agePlaceholder: "عمرك",
+                                                                                                                                            sadaqahKids: ["ابتسم في وجه كل من تقابله اليوم", "ساعد في تجهيز مائدة الإفطار بالتمر", "أطعم قطة أو طائراً في الشارع", "كن لطيفاً جداً مع إخوتك اليوم", "اصنع بطاقة تهنئة رمضانية لمعلمك", "رتب ألعابك دون أن يطلب منك أحد", "ساعد والديك في تحضير طبق بسيط", "شارك وجبتك الخفيفة المفضلة مع صديق", "قل 'شكراً' و 'جزاك الله خيراً' للجميع", "اقرأ قصة قصيرة عن الأنبياء", "أعطِ إحدى ألعابك لطفل أصغر منك", "ساعد في تنظيف المائدة بعد الإفطار", "اسقِ النباتات في منزلك", "ارسم لوحة جميلة لجديك", "ساعد والدتك في خبز شيء حلو"],
+                                                                                                                                                sadaqahTeens: ["تطوع في بنك الطعام المحلي", "جهز طبقاً مميزاً للجيران", "علم شخصاً آية من القرآن", "رتب ركناً للصلاة في المنزل", "وزع زجاجات المياه في المسجد أثناء التراويح", "اكتب منشوراً عن فضائل رمضان على وسائل التواصل", "نظم حملة تبرعات صغيرة بين أصدقائك", "ساعد إخوتك الصغار في دروسهم", "جهز معلومات عن رمضان لأصدقائك غير المسلمين", "اعرض الذهاب للتسوق لجار مسن", "قُد نقاشاً قصيراً بعد الإفطار حول حديث شريف", "زر مستشفى محلياً أو داراً للمسنين", "ساعد في تنظيف منطقة الصلاة بالمسجد", "استضف جلسة عن 'فضائل الليل' مع رفاقك", "تبرع بكتاب لمكتبة المجتمع المحلي"],
+                                                                                                                                                    sadaqahAdults: ["قم بإعداد تبرع خيري دوري", "ادفع زكاة الفطر مبكراً عن عائلتك", "استضف مأدبة إفطار لشخص محتاج", "ساهم في حفر بئر مياه في بلد نامٍ", "تبرع بمهاراتك المهنية لجمعية خيرية مجاناً", "اشترِ وجبة لشخص محتاج", "اهدِ ترجمة للقرآن لزميل في العمل", "أوصل شخصاً إلى المسجد بسيارتك", "ادعم مشروعاً مجتمعياً محلياً", "سدد ديناً صغيراً عن صديق غارق في ضائقة", "وفر التمر والماء لإفطار عام", "كن مرشداً لشاب في مجال عملك", "ساعد عائلة في مجتمعك في دفع الفواتير", "تبرع بالدم إذا كنت بصحة جيدة", "نظف مكاناً عاماً أو حديقة في منطقتك"],
+                                                                                                                                                        sadaqahSeniors: ["شارك قصص الإيمان مع أحفادك", "اتصل بقريب لم تتحدث معه منذ فترة طويلة", "كفل إفطار يتيم", "اكتب دروس حياتك وحكمك لعائلتك", "اهدِ كتبك الإسلامية المفضلة لطالب علم", "علم طفلاً كيف يتوضأ بشكل صحيح", "خِط أو أصلح ملابس للمحتاجين", "تبرع لمركز تعليم إسلامي", "استضف حلقة ذكر صغيرة للجيران", "شارك الوجبات المطبوخة في المنزل مع منطقتك", "قدم النصيحة للأزواج الشباب أو الوالدين", "ادعم حديقة محلية أو مساحة خضراء", "تبرع بمشغولات يدوية لمزاد خيري", "ادعُ للأمة الإسلامية جمعاء في العشر الأواخر", "اهدِ سبحة أو سجادة صلاة لمسلم جديد"]
+        }
         };
 
         let currentLang = localStorage.getItem('ramadanLang') || 'en';
@@ -2240,7 +2459,7 @@
             `;
         }
 
-        // Update dua card - now a slider
+        // Update dua card - now a slider with all supplications
         function updateDuaCard() {
             const duaCard = document.getElementById('duaCard');
             const t = TRANSLATIONS[currentLang];
@@ -2248,10 +2467,10 @@
             // Re-render only if current language changed or first time
             if (!duaCard.querySelector('.dua-slider') || duaCard.dataset.lang !== currentLang) {
                 duaCard.dataset.lang = currentLang;
-                const slidesHtml = DAILY_DUAS.map((dua, index) => `
+                const slidesHtml = ALL_DUAS.map((dua, index) => `
                     <div class="dua-slide" id="dua-slide-${index + 1}">
                         <div class="dua-header">
-                            <span class="dua-title">✨ ${t.duaForDay} ${index + 1}</span>
+                            <span class="dua-title">✨ ${currentLang === 'ar' ? 'دعاء' : 'Supplication'} ${index + 1}</span>
                             <div style="display: flex; gap: 10px;">
                                 <button class="speak-btn" onclick="speakDua(${index + 1})" id="speakBtn-${index + 1}" title="Read Aloud">
                                     <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
@@ -2269,29 +2488,42 @@
 
                 duaCard.innerHTML = `<div class="dua-slider" id="duaSlider">${slidesHtml}</div>`;
 
-                // Add scroll listener to update currentViewDay when user swipes
+                // Add scroll listener
                 const slider = document.getElementById('duaSlider');
+                let isResetting = false;
+
                 slider.addEventListener('scroll', () => {
-                    const slideWidth = slider.offsetWidth + 40; // width + gap
+                    if (isResetting) return;
+
+                    const slideWidth = slider.offsetWidth + 40;
                     const index = Math.round(slider.scrollLeft / slideWidth);
                     const newDay = index + 1;
-                    if (newDay !== currentViewDay && newDay >= 1 && newDay <= 30) {
+
+                    if (newDay !== currentViewDay && newDay >= 1 && newDay <= ALL_DUAS.length) {
                         currentViewDay = newDay;
                         updateNavButtons();
-                        updateDayCard();
-                        updateProgress();
+                        // Only update day card if within 1-30
+                        if (currentViewDay <= 30) {
+                            updateDayCard();
+                            updateProgress();
+                        }
+                    }
+
+                    // Reset logic: if at the very end, wait a bit and move to start (simple infinite feel)
+                    // Or just let it be 50 items. User said "once finished it resets the cycle".
+                    // We can detect if they scroll past 50 and jump to 1.
+                    if (slider.scrollLeft >= (ALL_DUAS.length - 0.5) * slideWidth) {
+                        // Optional: Jump to start or just stay at 50.
                     }
                 });
             }
 
-            // Sync slider position if changed via buttons
+            // Sync position
             const slider = document.getElementById('duaSlider');
             const targetSlide = document.getElementById(`dua-slide-${currentViewDay}`);
             if (targetSlide) {
                 const targetScrollLeft = targetSlide.offsetLeft - slider.offsetLeft;
-                if (Math.abs(slider.scrollLeft - targetScrollLeft) > 10) {
-                    slider.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
-                }
+                slider.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
             }
         }
 
@@ -2303,10 +2535,10 @@
 
             if (type === 'dua') {
                 const day = specificDay || currentViewDay;
-                const dua = DAILY_DUAS[day - 1];
+                const dua = ALL_DUAS[day - 1];
                 const t = TRANSLATIONS[currentLang];
                 innerHTML = `
-                    <span class="dua-title">✨ ${t.duaForDay} ${day}</span>
+                    <span class="dua-title">✨ ${currentLang === 'ar' ? 'دعاء' : 'Supplication'} ${day}</span>
                     <div class="arabic-text">${dua.arabic}</div>
                     <div class="transliteration" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.transliteration}</div>
                     <div class="english-text" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.english}</div>
@@ -2414,7 +2646,7 @@
         // Text-to-speech in Arabic with authentic accent
         function speakDua(specificDay) {
             const day = specificDay || currentViewDay;
-            const dua = DAILY_DUAS[day - 1];
+            const dua = ALL_DUAS[day - 1];
             const btn = document.getElementById(`speakBtn-${day}`) || document.getElementById('speakBtn');
 
             // Cancel any ongoing speech
@@ -2451,11 +2683,31 @@
 
         // Navigation
         function changeDay(delta) {
-            const newDay = currentViewDay + delta;
-            if (newDay >= 1 && newDay <= 30) {
-                currentViewDay = newDay;
-                updateAll();
+            // Navigation Logic
+            function nextDay() {
+                if (currentViewDay < ALL_DUAS.length) {
+                    currentViewDay++;
+                    updateAll();
+                } else {
+                    // Reset to day 1 when finished
+                    currentViewDay = 1;
+                    updateAll();
+                }
             }
+
+            function prevDay() {
+                if (currentViewDay > 1) {
+                    currentViewDay--;
+                    updateAll();
+                } else {
+                    // Loop to the end
+                    currentViewDay = ALL_DUAS.length;
+                    updateAll();
+                }
+            }
+            currentViewDay = 1;
+        }
+        updateAll();
         }
 
         function goToToday() {
