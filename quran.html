@@ -808,8 +808,6 @@
             document.querySelectorAll('.speak-btn').forEach(btn => btn.classList.remove('speaking'));
         }
 
-        const ISLAM_SOBHI_SURAHS = [1, 2, 3, 5, 6, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 41, 42, 43, 44, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114];
-
         async function speakAyah(surahNum, ayahNum) {
             const btn = document.getElementById(`speak_${surahNum}_${ayahNum}`);
 
@@ -820,36 +818,17 @@
 
             stopCurrentAudio();
 
-            let audioUrl;
-            let isFullSurah = false;
-
-            // Check if Islam Sobhi has this Surah
-            if (ISLAM_SOBHI_SURAHS.includes(surahNum)) {
-                // Islam Sobhi (Full Surah)
-                const paddedSurah = String(surahNum).padStart(3, '0');
-                audioUrl = `https://server14.mp3quran.net/islam/Rewayat-Hafs-A-n-Assem/${paddedSurah}.mp3`;
-                isFullSurah = true;
-
-                // Show a small toast/notice that this is full surah
-                const toast = document.createElement('div');
-                toast.textContent = "Playing full Surah (Islam Sobhi)";
-                toast.style.cssText = "position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: #gold; padding: 10px 20px; border-radius: 20px; z-index: 2000; animation: fadeOut 3s forwards; pointer-events: none;";
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-
-            } else {
-                // Fallback to Mishary Rashid Alafasy (Verse by Verse)
-                audioUrl = `https://audio.qurancdn.com/7/${surahNum}/${ayahNum}.mp3`;
-            }
+            // Nasser Al Qatami (Verse by Verse)
+            // Pattern: https://everyayah.com/data/Nasser_Alqatami_128kbps/{001}{001}.mp3
+            const paddedSurah = String(surahNum).padStart(3, '0');
+            const paddedAyah = String(ayahNum).padStart(3, '0');
+            const audioUrl = `https://everyayah.com/data/Nasser_Alqatami_128kbps/${paddedSurah}${paddedAyah}.mp3`;
 
             const audio = new Audio(audioUrl);
             window.currentAudio = audio;
 
             // Update UI
             btn.classList.add('speaking');
-
-            // If full surah, maybe highlight all play buttons or just the main one?
-            // For now, valid simple behavior: highlight the clicked button.
 
             audio.onended = () => {
                 btn.classList.remove('speaking');
@@ -858,7 +837,13 @@
 
             audio.onerror = () => {
                 btn.classList.remove('speaking');
-                alert("Error loading recitation (Islam Sobhi).");
+                // Fallback to Yasser Al-Dossari if Nasser fails
+                const fallbackUrl = `https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/${paddedSurah}${paddedAyah}.mp3`;
+                const fallbackAudio = new Audio(fallbackUrl);
+                fallbackAudio.play().catch(err => {
+                    console.error("Fallback audio play error:", err);
+                    alert("Error loading recitation (Nasser Al Qatami and fallback failed).");
+                });
             };
 
             audio.play().catch(err => {
