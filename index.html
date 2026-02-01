@@ -1735,13 +1735,6 @@
                                 <path d="M8 5v14l11-7z" fill="currentColor" />
                             </svg>
                         </button>
-                        <button class="speak-btn" onclick="speakTranslation()" id="speakTranslationBtn"
-                            style="width: 35px; height: 35px;" title="Read Translation (English)">
-                            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
-                                <path
-                                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-                            </svg>
-                        </button>
                         <button class="fullscreen-btn" onclick="openFullScreen('ayah')" title="Full Screen"
                             style="width: 35px; height: 35px;">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -2878,9 +2871,14 @@
         const ISLAM_SOBHI_SURAHS = [1, 2, 3, 5, 6, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 41, 42, 43, 44, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114];
 
         function speakAyah() {
+            // Get valid index from the DOM to ensure 100% sync
+            const container = document.getElementById('ayahContainer');
+            const domIndex = container.getAttribute('data-verse-index');
+            const idx = domIndex ? parseInt(domIndex) : currentAyahIndex;
+
             const surah = getTodaysSurah();
-            const ayah = surah.ayahs[currentAyahIndex];
-            // The button is static, but we need to ensure we remove 'speaking' class from it properly
+            const ayah = surah.ayahs[idx];
+
             const btn = document.getElementById('speakAyahBtn');
 
             stopCurrentAudio();
@@ -2889,6 +2887,7 @@
             const [sNumStr, aNumStr] = ayah.verse.split(':');
             const sNum = parseInt(sNumStr);
             const aNum = parseInt(aNumStr);
+
             // Nasser Al Qatami (Verse by Verse)
             const paddedSurah = String(sNum).padStart(3, '0');
             const paddedAyah = String(aNum).padStart(3, '0');
@@ -2909,26 +2908,7 @@
             audio.play().catch(err => {
                 console.error('Autoplay blocked or error:', err);
                 if (btn) btn.classList.remove('speaking');
-                alert("Playback failed: " + err.message);
             });
-        }
-
-        // Read Translation (English)
-        function speakTranslation() {
-            const surah = getTodaysSurah();
-            const ayah = surah.ayahs[currentAyahIndex];
-            const text = ayah.translation;
-            const btn = document.getElementById('speakTranslationBtn');
-
-            stopCurrentAudio();
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-
-            utterance.onstart = () => { if (btn) btn.classList.add('speaking'); };
-            utterance.onend = () => { if (btn) btn.classList.remove('speaking'); };
-
-            window.speechSynthesis.speak(utterance);
         }
 
         function speakAdhkar(elementId) {
@@ -3533,6 +3513,11 @@
         function displayAyah(index) {
             const surah = getTodaysSurah();
             const ayah = surah.ayahs[index];
+
+            // Store the index on the container for the player to read
+            const container = document.getElementById('ayahContainer');
+            container.setAttribute('data-verse-index', index);
+
             document.getElementById('ayahArabic').textContent = ayah.arabic;
             document.getElementById('ayahTranslation').textContent = ayah.translation;
             document.getElementById('ayahTranslation').style.display = currentLang === 'ar' ? 'none' : 'block';
