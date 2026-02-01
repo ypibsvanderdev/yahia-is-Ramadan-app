@@ -1731,8 +1731,7 @@
                         <button class="speak-btn" onclick="speakAyah()" id="speakAyahBtn"
                             style="width: 35px; height: 35px;" title="Read Aloud">
                             <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
-                                <path
-                                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                                <path d="M8 5v14l11-7z" fill="currentColor" />
                             </svg>
                         </button>
                         <button class="fullscreen-btn" onclick="openFullScreen('ayah')" title="Full Screen"
@@ -2868,7 +2867,7 @@
 
         function speakAyah() {
             const surah = getTodaysSurah();
-            const ayah = surah.ayahs[currentAyahIndex];
+            const ayah = surah.ayahs[currentAyahIndex]; // Use the currently viewed Ayah index
             const btn = document.getElementById('speakAyahBtn');
 
             stopCurrentAudio();
@@ -2888,14 +2887,16 @@
             if (btn) btn.classList.add('speaking');
 
             audio.onended = () => { if (btn) btn.classList.remove('speaking'); window.currentAudio = null; };
-            audio.onerror = () => {
-                console.log('Reciter audio failed, falling back to TTS');
-                speakTextFallback(ayah.arabic, btn);
+            audio.onerror = (e) => {
+                console.error('Audio playback failed', e);
+                if (btn) btn.classList.remove('speaking');
+                alert("Audio could not play. Please check your internet connection.");
             };
 
             audio.play().catch(err => {
-                console.log('Autoplay blocked or error:', err);
-                speakTextFallback(ayah.arabic, btn);
+                console.error('Autoplay blocked or error:', err);
+                if (btn) btn.classList.remove('speaking');
+                alert("Playback failed: " + err.message);
             });
         }
 
@@ -2908,16 +2909,52 @@
 
             stopCurrentAudio();
 
-            const text = encodeURIComponent(arabicText);
-            const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ar&client=tw-ob&q=${text}`;
+            // Reuse the chunking logic from speakDua for Adhkar as well
+            const playSequence = (chunks, index = 0) => {
+                if (index >= chunks.length) {
+                    if (btn) btn.classList.remove('speaking');
+                    window.currentAudio = null;
+                    return;
+                }
 
-            const audio = new Audio(audioUrl);
-            window.currentAudio = audio;
+                const encoded = encodeURIComponent(chunks[index]);
+                const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ar&client=tw-ob&q=${encoded}`;
+                const audio = new Audio(url);
+                window.currentAudio = audio;
 
-            if (btn) btn.classList.add('speaking');
+                if (btn) btn.classList.add('speaking');
 
-            audio.onended = () => { if (btn) btn.classList.remove('speaking'); window.currentAudio = null; };
-            audio.play().catch(() => speakTextFallback(arabicText, btn));
+                audio.onended = () => playSequence(chunks, index + 1);
+                audio.onerror = () => {
+                    console.log('Chunk playback failed');
+                    playSequence(chunks, index + 1);
+                };
+
+                audio.play().catch(err => {
+                    console.log('Autoplay error', err);
+                    if (btn) btn.classList.remove('speaking');
+                    speakTextFallback(chunks[index], btn);
+                });
+            };
+
+            if (arabicText.length < 180) {
+                playSequence([arabicText]);
+            } else {
+                const parts = arabicText.split(/([،.;])/);
+                let chunks = [];
+                let currentChunk = "";
+
+                for (let i = 0; i < parts.length; i++) {
+                    if (currentChunk.length + parts[i].length < 180) {
+                        currentChunk += parts[i];
+                    } else {
+                        if (currentChunk.trim()) chunks.push(currentChunk);
+                        currentChunk = parts[i];
+                    }
+                }
+                if (currentChunk.trim()) chunks.push(currentChunk);
+                playSequence(chunks);
+            }
         }
 
         function speakTextFallback(text, btn) {
