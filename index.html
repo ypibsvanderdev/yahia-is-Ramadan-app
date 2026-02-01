@@ -431,6 +431,28 @@
             line-height: 1.6;
         }
 
+        /* Dua Slider Styles */
+        .dua-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            gap: 40px;
+            padding-bottom: 10px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .dua-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .dua-slide {
+            flex: 0 0 100%;
+            scroll-snap-align: center;
+            width: 100%;
+        }
+
         /* Navigation buttons */
         .nav-buttons {
             display: flex;
@@ -2218,41 +2240,73 @@
             `;
         }
 
-        // Update dua card
+        // Update dua card - now a slider
         function updateDuaCard() {
             const duaCard = document.getElementById('duaCard');
-            const dua = DAILY_DUAS[currentViewDay - 1];
             const t = TRANSLATIONS[currentLang];
 
-            duaCard.innerHTML = `
-                <div class="dua-header">
-                    <span class="dua-title">✨ ${t.duaForDay} ${currentViewDay}</span>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="speak-btn" onclick="speakDua()" id="speakBtn" title="Read Aloud">
-                            <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                        </button>
-                        <button class="fullscreen-btn" onclick="openFullScreen('dua')" title="Full Screen">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-                        </button>
+            // Re-render only if current language changed or first time
+            if (!duaCard.querySelector('.dua-slider') || duaCard.dataset.lang !== currentLang) {
+                duaCard.dataset.lang = currentLang;
+                const slidesHtml = DAILY_DUAS.map((dua, index) => `
+                    <div class="dua-slide" id="dua-slide-${index + 1}">
+                        <div class="dua-header">
+                            <span class="dua-title">✨ ${t.duaForDay} ${index + 1}</span>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="speak-btn" onclick="speakDua(${index + 1})" id="speakBtn-${index + 1}" title="Read Aloud">
+                                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                </button>
+                                <button class="fullscreen-btn" onclick="openFullScreen('dua', null, ${index + 1})" title="Full Screen">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="arabic-text">${dua.arabic}</div>
+                        <div class="transliteration" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.transliteration}</div>
+                        <div class="english-text" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.english}</div>
                     </div>
-                </div>
-                <div class="arabic-text">${dua.arabic}</div>
-                <div class="transliteration" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.transliteration}</div>
-                <div class="english-text" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.english}</div>
-            `;
+                `).join('');
+
+                duaCard.innerHTML = `<div class="dua-slider" id="duaSlider">${slidesHtml}</div>`;
+
+                // Add scroll listener to update currentViewDay when user swipes
+                const slider = document.getElementById('duaSlider');
+                slider.addEventListener('scroll', () => {
+                    const slideWidth = slider.offsetWidth + 40; // width + gap
+                    const index = Math.round(slider.scrollLeft / slideWidth);
+                    const newDay = index + 1;
+                    if (newDay !== currentViewDay && newDay >= 1 && newDay <= 30) {
+                        currentViewDay = newDay;
+                        updateNavButtons();
+                        updateDayCard();
+                        updateProgress();
+                    }
+                });
+            }
+
+            // Sync slider position if changed via buttons
+            const slider = document.getElementById('duaSlider');
+            const targetSlide = document.getElementById(`dua-slide-${currentViewDay}`);
+            if (targetSlide) {
+                const targetScrollLeft = targetSlide.offsetLeft - slider.offsetLeft;
+                if (Math.abs(slider.scrollLeft - targetScrollLeft) > 10) {
+                    slider.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+                }
+            }
         }
 
         // Full Screen Functions
-        function openFullScreen(type, elementId) {
+        function openFullScreen(type, elementId, specificDay) {
             const overlay = document.getElementById('fullscreenOverlay');
             const content = document.getElementById('fullscreenContent');
             let innerHTML = '';
 
             if (type === 'dua') {
-                const dua = DAILY_DUAS[currentViewDay - 1];
+                const day = specificDay || currentViewDay;
+                const dua = DAILY_DUAS[day - 1];
                 const t = TRANSLATIONS[currentLang];
                 innerHTML = `
-                    <span class="dua-title">✨ ${t.duaForDay} ${currentViewDay}</span>
+                    <span class="dua-title">✨ ${t.duaForDay} ${day}</span>
                     <div class="arabic-text">${dua.arabic}</div>
                     <div class="transliteration" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.transliteration}</div>
                     <div class="english-text" style="${currentLang === 'ar' ? 'display:none' : ''}">${dua.english}</div>
@@ -2358,9 +2412,10 @@
         }
 
         // Text-to-speech in Arabic with authentic accent
-        function speakDua() {
-            const dua = DAILY_DUAS[currentViewDay - 1];
-            const btn = document.getElementById('speakBtn');
+        function speakDua(specificDay) {
+            const day = specificDay || currentViewDay;
+            const dua = DAILY_DUAS[day - 1];
+            const btn = document.getElementById(`speakBtn-${day}`) || document.getElementById('speakBtn');
 
             // Cancel any ongoing speech
             window.speechSynthesis.cancel();
@@ -2383,11 +2438,11 @@
             utterance.pitch = 0.95; // Slightly lower for reverent tone
             utterance.volume = 1.0;
 
-            btn.classList.add('speaking');
-            utterance.onend = () => btn.classList.remove('speaking');
+            if (btn) btn.classList.add('speaking');
+            utterance.onend = () => { if (btn) btn.classList.remove('speaking'); };
             utterance.onerror = (e) => {
                 console.log('Speech error:', e);
-                btn.classList.remove('speaking');
+                if (btn) btn.classList.remove('speaking');
             };
 
             window.speechSynthesis.speak(utterance);
