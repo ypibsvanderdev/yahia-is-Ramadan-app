@@ -919,6 +919,24 @@
             color: var(--gold);
             font-weight: 600;
             font-size: 1.1rem;
+            display: none;
+            cursor: pointer;
+        }
+
+        [dir="rtl"] .prayer-time-display {
+            display: block;
+        }
+
+        [dir="rtl"] .prayer-time-input {
+            display: none;
+        }
+
+        .prayer-item.editing .prayer-time-input {
+            display: block !important;
+        }
+
+        .prayer-item.editing .prayer-time-display {
+            display: none !important;
         }
 
         .next-prayer-banner {
@@ -1619,11 +1637,13 @@
                 <div class="prayer-list">
                     <div class="prayer-item" id="fajrItem">
                         <span class="prayer-name">
-                            <span class="prayer-icon">🌅</span>
+                            <span class="prayer-icon">🌄</span>
                             <span id="fajrName">Fajr</span>
                         </span>
                         <input type="time" class="prayer-time-input" id="fajrTime" value="05:30"
                             onchange="savePrayerTimes()">
+                        <span class="prayer-time-display" id="fajrTimeDisplay"
+                            onclick="this.parentElement.classList.add('editing')"></span>
                     </div>
 
                     <div class="prayer-item" id="dhuhrItem">
@@ -1633,6 +1653,8 @@
                         </span>
                         <input type="time" class="prayer-time-input" id="dhuhrTime" value="12:30"
                             onchange="savePrayerTimes()">
+                        <span class="prayer-time-display" id="dhuhrTimeDisplay"
+                            onclick="this.parentElement.classList.add('editing')"></span>
                     </div>
 
                     <div class="prayer-item" id="asrItem">
@@ -1642,15 +1664,19 @@
                         </span>
                         <input type="time" class="prayer-time-input" id="asrTime" value="15:45"
                             onchange="savePrayerTimes()">
+                        <span class="prayer-time-display" id="asrTimeDisplay"
+                            onclick="this.parentElement.classList.add('editing')"></span>
                     </div>
 
                     <div class="prayer-item" id="maghribItem">
                         <span class="prayer-name">
-                            <span class="prayer-icon">🌅</span>
+                            <span class="prayer-icon">🌇</span>
                             <span id="maghribName">Maghrib</span>
                         </span>
                         <input type="time" class="prayer-time-input" id="maghribTime" value="18:15"
                             onchange="savePrayerTimes()">
+                        <span class="prayer-time-display" id="maghribTimeDisplay"
+                            onclick="this.parentElement.classList.add('editing')"></span>
                     </div>
 
                     <div class="prayer-item" id="ishaItem">
@@ -1660,6 +1686,8 @@
                         </span>
                         <input type="time" class="prayer-time-input" id="ishaTime" value="19:45"
                             onchange="savePrayerTimes()">
+                        <span class="prayer-time-display" id="ishaTimeDisplay"
+                            onclick="this.parentElement.classList.add('editing')"></span>
                     </div>
                 </div>
 
@@ -2119,7 +2147,8 @@
                 fajr: "Fajr",
                 dhuhr: "Dhuhr",
                 asr: "Asr",
-                isha: "العشاء",
+                maghrib: "Maghrib",
+                isha: "Isha",
                 recipes: "🍳 Recipes",
                 recipesTitle: "🍳 Ramadan Kitchen",
                 recipesSubtitle: "Authentic Middle Eastern flavors for your Ramadan.",
@@ -2147,7 +2176,9 @@
                 sadaqahKids: ["Smile at everyone you meet today", "Help set up the Iftar table with dates", "Feed a stray cat or bird", "Be extra kind to your siblings", "Make a hand-made Ramadan card for your teacher", "Tidy up your toys without being asked", "Help your parents prepare a simple dish", "Share your favorite snack with a friend", "Say 'Thank you' and 'Jazakallah' to everyone", "Read a short story about the Prophets", "Give one of your toys to a younger child", "Help clear the table after Iftar", "Water the plants in your house", "Make a drawing for your grandparents", "Help your mom bake something sweet"],
                 sadaqahTeens: ["Volunteer at a local food bank", "Prepare a special dish for neighbors", "Teach someone a verse of Quran", "Set up the prayer corner at home", "Distribute water bottles at the Masjid during Tarawih", "Write a blog post or social media post about Ramadan", "Organize a small donation drive among friends", "Help your younger siblings with their studies", "Prepare an info sheet about Ramadan for non-Muslim friends", "Offer to do the grocery shopping for an elderly neighbor", "Lead a short discussion after Iftar about a Hadith", "Visit a local hospital or nursing home", "Help clean the Masjid prayer area", "Host a 'virtue of the night' talk with friends", "Donate a book to a community library"],
                 sadaqahAdults: ["Setup a recurring charity donation", "Pay Zakat-ul-Fitr early for your family", "Host an Iftar for someone in need", "Sponsor a water well in a developing country", "Donate your professional skills to a charity for free", "Buy a meal for a homeless person", "Gift a Quran translation to a colleague", "Offer a ride to someone going to the Masjid", "Support a local community project", "Pay off a small debt for a friend in hardship", "Provide dates and water for a public Iftar", "Mentor a young person in your field", "Help a family in your community with their house bills", "Donate blood if you are healthy", "Clean a public space or park in your neighborhood"],
-                sadaqahSeniors: ["Share stories of faith with grandchildren", "Call a relative you haven't spoken to in a long time", "Sponsor an Iftar for an orphan", "Write down your life lessons and wisdom for your family", "Gift your favorite Islamic books to a student", "Teach a child how to perform Wudu correctly", "Sew or mend clothes for those in need", "Donate to an Islamic education center", "Host a small Halaqa (gathering) for neighbors", "Share home-cooked meals with your community", "Offer advice to young couples or parents", "Support a local garden or green space", "Donate hand-crafted items to a charity auction", "Pray for the entire Ummah during the last ten nights", "Gift prayer beads or a prayer mat to a new Muslim"]
+                sadaqahSeniors: ["Share stories of faith with grandchildren", "Call a relative you haven't spoken to in a long time", "Sponsor an Iftar for an orphan", "Write down your life lessons and wisdom for your family", "Gift your favorite Islamic books to a student", "Teach a child how to perform Wudu correctly", "Sew or mend clothes for those in need", "Donate to an Islamic education center", "Host a small Halaqa (gathering) for neighbors", "Share home-cooked meals with your community", "Offer advice to young couples or parents", "Support a local garden or green space", "Donate hand-crafted items to a charity auction", "Pray for the entire Ummah during the last ten nights", "Gift prayer beads or a prayer mat to a new Muslim"],
+                am: "AM",
+                pm: "PM"
             },
             ar: {
                 mainTitle: "🌙 رفيق رمضان",
@@ -2216,7 +2247,9 @@
                 sadaqahKids: ["ابتسم في وجه كل من تقابله اليوم", "ساعد في تجهيز مائدة الإفطار بالتمر", "أطعم قطة أو طائراً في الشارع", "كن لطيفاً جداً مع إخوتك اليوم", "اصنع بطاقة تهنئة رمضانية لمعلمك", "رتب ألعابك دون أن يطلب منك أحد", "ساعد والديك في تحضير طبق بسيط", "شارك وجبتك الخفيفة المفضلة مع صديق", "قل 'شكراً' و 'جزاك الله خيراً' للجميع", "اقرأ قصة قصيرة عن الأنبياء", "أعطِ إحدى ألعابك لطفل أصغر منك", "ساعد في تنظيف المائدة بعد الإفطار", "اسقِ النباتات في منزلك", "ارسم لوحة جميلة لجديك", "ساعد والدتك في خبز شيء حلو"],
                 sadaqahTeens: ["تطوع في بنك الطعام المحلي", "جهز طبقاً مميزاً للجيران", "علم شخصاً آية من القرآن", "رتب ركناً للصلاة في المنزل", "وزع زجاجات المياه في المسجد أثناء التراويح", "اكتب منشوراً عن فضائل رمضان على وسائل التواصل", "نظم حملة تبرعات صغيرة بين أصدقائك", "ساعد إخوتك الصغار في دروسهم", "جهز معلومات عن رمضان لأصدقائك غير المسلمين", "اعرض الذهاب للتسوق لجار مسن", "قُد نقاشاً قصيراً بعد الإفطار حول حديث شريف", "زر مستشفى محلياً أو داراً للمسنين", "ساعد في تنظيف منطقة الصلاة بالمسجد", "استضف جلسة عن 'فضائل الليل' مع رفاقك", "تبرع بكتاب لمكتبة المجتمع المحلي"],
                 sadaqahAdults: ["قم بإعداد تبرع خيري دوري", "ادفع زكاة الفطر مبكراً عن عائلتك", "استضف مأدبة إفطار لشخص محتاج", "ساهم في حفر بئر مياه في بلد نامٍ", "تبرع بمهاراتك المهنية لجمعية خيرية مجاناً", "اشترِ وجبة لشخص محتاج", "اهدِ ترجمة للقرآن لزميل في العمل", "أوصل شخصاً إلى المسجد بسيارتك", "ادعم مشروعاً مجتمعياً محلياً", "سدد ديناً صغيراً عن صديق غارق في ضائقة", "وفر التمر والماء لإفطار عام", "كن مرشداً لشاب في مجال عملك", "ساعد عائلة في مجتمعك في دفع الفواتير", "تبرع بالدم إذا كنت بصحة جيدة", "نظف مكاناً عاماً أو حديقة في منطقتك"],
-                sadaqahSeniors: ["شارك قصص الإيمان مع أحفادك", "اتصل بقريب لم تتحدث معه منذ فترة طويلة", "كفل إفطار يتيم", "اكتب دروس حياتك وحكمك لعائلتك", "اهدِ كتبك الإسلامية المفضلة لطالب علم", "علم طفلاً كيف يتوضأ بشكل صحيح", "خِط أو أصلح ملابس للمحتاجين", "تبرع لمركز تعليم إسلامي", "استضف حلقة ذكر صغيرة للجيران", "شارك الوجبات المطبوخة في المنزل مع منطقتك", "قدم النصيحة للأزواج الشباب أو الوالدين", "ادعم حديقة محلية أو مساحة خضراء", "تبرع بمشغولات يدوية لمزاد خيري", "ادعُ للأمة الإسلامية جمعاء في العشر الأواخر", "اهدِ سبحة أو سجادة صلاة لمسلم جديد"]
+                sadaqahSeniors: ["شارك قصص الإيمان مع أحفادك", "اتصل بقريب لم تتحدث معه منذ فترة طويلة", "كفل إفطار يتيم", "اكتب دروس حياتك وحكمك لعائلتك", "اهدِ كتبك الإسلامية المفضلة لطالب علم", "علم طفلاً كيف يتوضأ بشكل صحيح", "خِط أو أصلح ملابس للمحتاجين", "تبرع لمركز تعليم إسلامي", "استضف حلقة ذكر صغيرة للجيران", "شارك الوجبات المطبوخة في المنزل مع منطقتك", "قدم النصيحة للأزواج الشباب أو الوالدين", "ادعم حديقة محلية أو مساحة خضراء", "تبرع بمشغولات يدوية لمزاد خيري", "ادعُ للأمة الإسلامية جمعاء في العشر الأواخر", "اهدِ سبحة أو سجادة صلاة لمسلم جديد"],
+                am: "ص",
+                pm: "م"
             }
         };
 
@@ -2273,6 +2306,12 @@
             PRAYERS.forEach(p => {
                 const el = document.getElementById(`${p}Name`);
                 if (el) el.textContent = t[p];
+                // Update display spans for each prayer
+                const input = document.getElementById(`${p}Time`);
+                const display = document.getElementById(`${p}TimeDisplay`);
+                if (input && display) {
+                    display.textContent = formatTime(input.value);
+                }
             });
 
             document.getElementById('footerMubarak').textContent = t.footerMubarak;
@@ -2615,7 +2654,7 @@
                     <span class="quran-title">📖 ${t.quran}</span>
                     <div class="ayah-arabic">${ayah.arabic}</div>
                     <div class="ayah-translation" style="${currentLang === 'ar' ? 'display:none' : ''}">${ayah.translation}</div>
-                    <div class="ayah-reference">📍 ${surah.name} ${ayah.verse}</div>
+                    <div class="ayah-reference">📍 ${surah.name} ${toArabicNumerals(ayah.verse)}</div>
                 `;
             } else if (type === 'adhkar') {
                 const el = document.getElementById(elementId);
@@ -2927,9 +2966,10 @@
         function formatTime(time24) {
             const [hours, minutes] = time24.split(':');
             const h = parseInt(hours);
-            const ampm = h >= 12 ? 'PM' : 'AM';
+            const t = TRANSLATIONS[currentLang];
+            const ampm = h >= 12 ? t.pm : t.am;
             const h12 = h % 12 || 12;
-            return `${h12}:${minutes} ${ampm}`;
+            return `${toArabicNumerals(h12)}:${toArabicNumerals(minutes)} ${ampm}`;
         }
 
         // Setup all reminders
@@ -3099,10 +3139,15 @@
                 const input = document.getElementById(`${prayer}Time`);
                 if (input) {
                     times[prayer] = input.value;
+                    const display = document.getElementById(`${prayer}TimeDisplay`);
+                    if (display) display.textContent = formatTime(input.value);
                 }
             });
             localStorage.setItem('prayerTimes', JSON.stringify(times));
             updateNextPrayer();
+
+            // Remove editing class from all items
+            document.querySelectorAll('.prayer-item').forEach(item => item.classList.remove('editing'));
 
             // Show brief confirmation
             const btn = document.querySelector('.save-prayers-btn');
@@ -3175,7 +3220,12 @@
                 const countdownEl = document.getElementById('nextPrayerCountdown');
 
                 const t = TRANSLATIONS[currentLang];
-                nameEl.textContent = t[prayer];
+
+                // Get the input for this prayer to get its value
+                const input = document.getElementById(`${prayer}Time`);
+                const timeStr = input ? formatTime(input.value) : '';
+
+                nameEl.textContent = `${t[prayer]} ${timeStr}`;
 
                 const hours = Math.floor(minutesUntil / 60);
                 const mins = minutesUntil % 60;
@@ -3261,7 +3311,7 @@
             document.getElementById('ayahArabic').textContent = ayah.arabic;
             document.getElementById('ayahTranslation').textContent = ayah.translation;
             document.getElementById('ayahTranslation').style.display = currentLang === 'ar' ? 'none' : 'block';
-            document.getElementById('ayahReference').textContent = `📍 ${surah.name} ${ayah.verse}`;
+            document.getElementById('ayahReference').textContent = `📍 ${surah.name} ${toArabicNumerals(ayah.verse)}`;
         }
 
         function nextAyah() {
@@ -3447,6 +3497,13 @@
             updateNextPrayer();
             checkNoteReminders();
         }, 60000);
+
+        // Click away from prayer editing
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.prayer-item')) {
+                document.querySelectorAll('.prayer-item').forEach(item => item.classList.remove('editing'));
+            }
+        });
 
         // Register Service Worker for PWA (Android Support)
         if ('serviceWorker' in navigator) {
