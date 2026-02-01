@@ -2612,7 +2612,7 @@
                                     ${t.browseAll}
                                 </button>
                                 <button class="speak-btn" onclick="speakDua(${index + 1})" id="speakBtn-${index + 1}" style="width: 35px; height: 35px;" title="Read Aloud">
-                                    <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                    <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
                                 </button>
                                 <button class="fullscreen-btn" onclick="openFullScreen('dua', null, ${index + 1})" style="width: 35px; height: 35px;" title="Full Screen">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
@@ -2798,7 +2798,8 @@
         function speakDua(specificDay) {
             const day = specificDay || currentViewDay;
             const dua = ALL_DUAS[day - 1];
-            const btn = document.getElementById(`speakBtn-${day}`) || document.getElementById('speakBtn');
+            // Fix: ensure we are targeting the button for the specific day passed in
+            const btn = document.getElementById(`speakBtn-${day}`);
 
             stopCurrentAudio();
 
@@ -2867,7 +2868,8 @@
 
         function speakAyah() {
             const surah = getTodaysSurah();
-            const ayah = surah.ayahs[currentAyahIndex]; // Use the currently viewed Ayah index
+            const ayah = surah.ayahs[currentAyahIndex];
+            // The button is static, but we need to ensure we remove 'speaking' class from it properly
             const btn = document.getElementById('speakAyahBtn');
 
             stopCurrentAudio();
