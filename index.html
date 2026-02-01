@@ -86,7 +86,7 @@
 
         /* Moon decoration */
         .moon {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 20px;
             width: 80px;
@@ -94,8 +94,9 @@
             background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%);
             border-radius: 50%;
             box-shadow: 0 0 60px rgba(255, 215, 0, 0.5), 0 0 100px rgba(255, 215, 0, 0.3);
-            z-index: 1;
+            z-index: 1000;
             animation: moonGlow 3s infinite ease-in-out;
+            pointer-events: none;
         }
 
         .moon::before {
@@ -1538,6 +1539,10 @@
                 <button class="nav-btn" id="nextBtn" onclick="nextDay()">Next Day →</button>
             </div>
 
+            <button class="nav-btn" onclick="showAllDuasModal()" id="browseAllBtn"
+                style="width: 100%; margin-bottom: 25px; background: rgba(255, 215, 0, 0.1); border-color: var(--gold); font-weight: 700;">📜
+                Browse All Duas</button>
+
             <!-- Notification Settings -->
             <div class="notification-card">
                 <div class="notification-header">
@@ -2232,6 +2237,7 @@
             document.getElementById('prevBtn').textContent = t.prevDay;
             document.getElementById('todayBtn').textContent = t.today;
             document.getElementById('nextBtn').textContent = t.nextDay;
+            document.getElementById('browseAllBtn').textContent = `📜 ${t.browseAll}`;
             document.getElementById('notifTitle').textContent = t.notifTitle;
             document.getElementById('remindAtLabel').textContent = t.remindAt;
             document.getElementById('saveNotifBtn').textContent = t.save;
@@ -2467,21 +2473,25 @@
             actualRamadanDay = getRamadanDay();
             const t = TRANSLATIONS[currentLang];
 
-            if (actualRamadanDay) {
-                if (currentViewDay === null) currentViewDay = actualRamadanDay;
+            if (actualRamadanDay && currentViewDay === actualRamadanDay) {
                 dayCard.innerHTML = `
                     <div class="day-label">${t.dayLabel}</div>
                     <div class="day-number">${toArabicNumerals(currentViewDay)}</div>
                     <div class="day-of-30">${t.dayOf30}</div>
                 `;
             } else {
-                if (currentViewDay === null) currentViewDay = 1;
-                const daysUntil = getDaysUntilRamadan();
+                // If it's not Ramadan, or if the user is browsing a different day
                 dayCard.innerHTML = `
-                    <div class="not-ramadan">${t.notRamadan}</div>
-                    <div class="countdown">${toArabicNumerals(daysUntil)} ${t.days}</div>
-                    <div class="day-of-30">${t.browseDuas}</div>
+                    <div class="day-label">${t.dayLabel}</div>
+                    <div class="day-number">${toArabicNumerals(currentViewDay)}</div>
+                    <div class="day-of-30">${t.dayOf30}</div>
                 `;
+
+                // If it's NOT Ramadan, show a small countdown below if needed, or just let users browse
+                if (!actualRamadanDay) {
+                    const daysUntil = getDaysUntilRamadan();
+                    dayCard.innerHTML += `<div style="font-size: 0.8rem; margin-top: 10px; color: var(--gold); opacity: 0.8;">${t.notRamadan} ${toArabicNumerals(daysUntil)} ${t.days}</div>`;
+                }
             }
         }
 
@@ -2502,7 +2512,7 @@
             container.innerHTML = `
                 <div class="progress-label">
                     <span>${t.progress}</span>
-                    <span>${actualDay}/30 ${t.days}</span>
+                    <span>${toArabicNumerals(actualDay)}/٣٠ ${t.days}</span>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${progress}%"></div>
