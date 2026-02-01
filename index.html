@@ -3508,12 +3508,20 @@
         }
 
         function nextAyah() {
+            stopCurrentAudio(); // Stop audio when switching
+            const btn = document.getElementById('speakAyahBtn');
+            if (btn) btn.classList.remove('speaking');
+
             const surah = getTodaysSurah();
             currentAyahIndex = (currentAyahIndex + 1) % surah.ayahs.length;
             displayAyah(currentAyahIndex);
         }
 
         function prevAyah() {
+            stopCurrentAudio(); // Stop audio when switching
+            const btn = document.getElementById('speakAyahBtn');
+            if (btn) btn.classList.remove('speaking');
+
             const surah = getTodaysSurah();
             currentAyahIndex = (currentAyahIndex - 1 + surah.ayahs.length) % surah.ayahs.length;
             displayAyah(currentAyahIndex);
