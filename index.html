@@ -1724,64 +1724,44 @@
 
 
             <!-- Daily Quran Ayahs -->
-            <!-- Daily Quran Ayahs - Split View -->
-            <div class="quran-split-container" style="display: flex; flex-direction: column; gap: 15px;">
-
-                <!-- Arabic Card -->
-                <div class="quran-card arabic-card"
-                    style="border: 1px solid rgba(255, 215, 0, 0.3); background: rgba(0,0,0,0.2);">
-                    <div class="quran-header">
-                        <span class="quran-title">📖 Al-Quran (Arabic)</span>
-                        <div style="display: flex; gap: 8px; margin-left: auto;">
-                            <button class="speak-btn" onclick="speakAyah()" id="speakAyahBtn"
-                                style="width: 35px; height: 35px;" title="Play Recitation (Nasser Al Qatami)">
-                                <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
-                                    <path d="M8 5v14l11-7z" fill="currentColor" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="ayah-container" id="ayahContainerArabic" style="min-height: 100px;">
-                        <div class="ayah-arabic" id="ayahArabic" style="font-size: 1.8rem;"></div>
-                        <div class="ayah-reference" id="ayahReferenceArabic"
-                            style="margin-top: 10px; color: var(--text-muted);"></div>
-                    </div>
-                </div>
-
-                <!-- Translation Card -->
-                <div class="quran-card translation-card"
-                    style="border: 1px dashed rgba(255, 255, 255, 0.2); background: rgba(0,0,0,0.1);">
-                    <div class="quran-header">
-                        <span class="quran-title">📜 Translation</span>
-                        <div style="display: flex; gap: 8px; margin-left: auto;">
-                            <button class="speak-btn" onclick="speakTranslation()" id="speakTranslationBtn"
-                                style="width: 35px; height: 35px;" title="Read Translation">
-                                <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
-                                    <path d="M8 5v14l11-7z" fill="currentColor" />
-                                </svg>
-                            </button>
-                            <button class="fullscreen-btn" onclick="openFullScreen('ayah')" title="Full Screen"
-                                style="width: 35px; height: 35px;">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
-                                    <path
-                                        d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="ayah-container" id="ayahContainerTranslation" style="min-height: 80px;">
-                        <div class="ayah-translation" id="ayahTranslation" style="font-size: 1.1rem; line-height: 1.6;">
-                        </div>
+            <!-- Daily Quran Ayahs (Single Card View) -->
+            <div class="quran-card">
+                <div class="quran-header">
+                    <span class="quran-title" id="quranTitle">📖 Daily Quran Ayahs</span>
+                    <div style="display: flex; gap: 8px; margin-left: auto;">
+                        <button class="speak-btn" onclick="speakAyah()" id="speakAyahBtn"
+                            style="width: 35px; height: 35px;" title="Play Recitation (Nasser Al Qatami)">
+                            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                                <path d="M8 5v14l11-7z" fill="currentColor" />
+                            </svg>
+                        </button>
+                        <button class="speak-btn" onclick="speakTranslation()" id="speakTranslationBtn"
+                            style="width: 35px; height: 35px;" title="Read Translation (English)">
+                            <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                                <path
+                                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                            </svg>
+                        </button>
+                        <button class="fullscreen-btn" onclick="openFullScreen('ayah')" title="Full Screen"
+                            style="width: 35px; height: 35px;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+                                <path
+                                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                                </path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-
+                <div class="ayah-container" id="ayahContainer">
+                    <div class="ayah-arabic" id="ayahArabic"></div>
+                    <div class="ayah-translation" id="ayahTranslation"></div>
+                    <div class="ayah-reference" id="ayahReferenceArabic"></div>
+                </div>
                 <div class="ayah-nav">
                     <button class="ayah-nav-btn" onclick="prevAyah()" id="prevAyahBtn">← Previous</button>
                     <button class="ayah-nav-btn" onclick="nextAyah()" id="nextAyahBtn">Next →</button>
                 </div>
-
             </div>
 
             <!-- Morning/Evening/Afternoon Adhkar -->
@@ -3555,9 +3535,8 @@
             const ayah = surah.ayahs[index];
             document.getElementById('ayahArabic').textContent = ayah.arabic;
             document.getElementById('ayahTranslation').textContent = ayah.translation;
-            // Ensure translation is visible in split mode, even if lang is AR, because it's a dedicated card
-            document.getElementById('ayahTranslation').style.display = 'block';
-            document.getElementById('ayahReferenceArabic').textContent = `📍 ${surah.name} ${toArabicNumerals(ayah.verse)}`;
+            document.getElementById('ayahTranslation').style.display = currentLang === 'ar' ? 'none' : 'block';
+            document.getElementById('ayahReference').textContent = `📍 ${surah.name} ${toArabicNumerals(ayah.verse)}`;
         }
 
         function nextAyah() {
