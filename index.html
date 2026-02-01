@@ -2114,7 +2114,7 @@
                 fajr: "Fajr",
                 dhuhr: "Dhuhr",
                 asr: "Asr",
-                isha: "Isha",
+                isha: "العشاء",
                 recipes: "🍳 Recipes",
                 recipesTitle: "🍳 Ramadan Kitchen",
                 recipesSubtitle: "Authentic Middle Eastern flavors for your Ramadan.",
@@ -2150,14 +2150,14 @@
                 dayLabel: "يوم رمضان",
                 dayOf30: "من ٣٠ يوماً",
                 notRamadan: "رمضان لم يبدأ بعد.",
-                days: "أيام",
+                days: "يوم",
                 browseDuas: "تصفح جميع الأدعية",
                 progress: "تقدم رمضان",
                 duaForDay: "دعاء اليوم",
                 browseAll: "تصفح جميع الأدعية",
                 prevDay: "الدعاء السابق →",
                 today: "📅 اليوم",
-                nextDay: "← الدعاء التالي",
+                nextDay: "الدعاء التالي ←",
                 notifTitle: "🔔 تذكيرات يومية",
                 remindAt: "ذكرني في:",
                 save: "حفظ",
@@ -2171,7 +2171,7 @@
                 fullQuran: "📖 المصحف الكامل",
                 home: "🏠 الرئيسية",
                 prev: "السابق →",
-                next: "← التالي",
+                next: "التالي ←",
                 footerMubarak: "رمضان مبارك! 🤲",
                 footerMadeWith: "صنع بقلب ❤️ من أجلك",
                 noNotes: "لا توجد ملاحظات بعد. أضف واحدة أعلاه! ✨",
@@ -2766,14 +2766,19 @@
             const content = document.getElementById('fullscreenContent');
             const t = TRANSLATIONS[currentLang];
 
-            let html = `<h2 style="color: var(--gold); margin-bottom: 20px;">${t.browseAll}</h2>`;
-            html += `<div style="display: grid; gap: 15px;">`;
+            let html = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h2 style="color: var(--gold); margin: 0;">${t.browseAll}</h2>
+                    <button onclick="closeFullScreen()" style="background: var(--accent); border: none; color: white; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 700;">${currentLang === 'ar' ? 'إغلاق' : 'Close'}</button>
+                </div>
+            `;
+            html += `<div style="display: grid; gap: 15px; max-height: 70vh; overflow-y: auto; padding: 10px; padding-right: 5px;">`;
 
             ALL_DUAS.forEach((dua, idx) => {
                 html += `
-                    <div onclick="jumpToDua(${idx + 1})" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; cursor: pointer; border: 1px solid rgba(255,215,0,0.1); transition: 0.3s;" onmouseover="this.style.borderColor='var(--gold) '" onmouseout="this.style.borderColor='rgba(255,215,0,0.1)'">
-                        <div style="color: var(--gold); font-weight: 700; margin-bottom: 5px;">${currentLang === 'ar' ? 'دعاء' : 'Dua'} ${idx + 1}</div>
-                        <div style="font-family: 'Amiri', serif; font-size: 1.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl;">${dua.arabic}</div>
+                    <div onclick="jumpToDua(${idx + 1})" style="background: rgba(255,255,255,0.05); padding: 18px; border-radius: 16px; cursor: pointer; border: 1px solid rgba(255,215,0,0.1); transition: 0.3s; text-align: right;" onmouseover="this.style.borderColor='var(--gold)'; this.style.background='rgba(255,215,0,0.05)'" onmouseout="this.style.borderColor='rgba(255,215,0,0.1)'; this.style.background='rgba(255,255,255,0.05)'">
+                        <div style="color: var(--gold); font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; opacity: 0.8;">${currentLang === 'ar' ? 'دعاء' : 'Supplication'} ${idx + 1}</div>
+                        <div style="font-family: 'Amiri', serif; font-size: 1.3rem; line-height: 1.4; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; direction: rtl;">${dua.arabic}</div>
                     </div>
                 `;
             });
@@ -2791,8 +2796,9 @@
         }
 
         function updateNavButtons() {
-            document.getElementById('prevBtn').disabled = currentViewDay <= 1;
-            document.getElementById('nextBtn').disabled = currentViewDay >= 30;
+            // No disabling - always allow skipping/cycling
+            document.getElementById('prevBtn').disabled = false;
+            document.getElementById('nextBtn').disabled = false;
         }
 
         function updateAll() {
@@ -3399,6 +3405,13 @@
 
         loadPrayerTimes();
         updateNextPrayer();
+        actualRamadanDay = getRamadanDay();
+        if (actualRamadanDay) {
+            currentViewDay = actualRamadanDay;
+        } else {
+            currentViewDay = 1;
+        }
+        updateUI();
         displayAyah(0);
         setupPrayerNotifications();
         renderNotes();
