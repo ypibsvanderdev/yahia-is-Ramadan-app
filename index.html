@@ -544,14 +544,14 @@
                 font-size: 1.5rem;
             }
 
-            .moon-fixed {
+            .moon {
                 width: 40px;
                 height: 40px;
                 top: 10px;
                 right: 10px;
             }
 
-            .moon-fixed::before {
+            .moon::before {
                 width: 32px;
                 height: 32px;
                 top: 2px;
@@ -2238,7 +2238,7 @@
             document.getElementById('prayerTimesTitle').textContent = t.prayerTimes;
             document.getElementById('nextPrayerLabel').textContent = t.nextPrayer;
             document.getElementById('savePrayersBtn').textContent = t.savePrayers;
-            document.getElementById('notes').textContent = t.notes;
+            document.getElementById('notesTitle').textContent = t.notes;
             document.getElementById('noteTextInput').placeholder = t.notePlaceholder;
             document.getElementById('addNoteBtn').textContent = t.addNote;
             const detectBtn = document.getElementById('detectLocText');
@@ -2249,8 +2249,12 @@
             if (madhabLabel) madhabLabel.textContent = t.madhab;
 
             document.getElementById('quranTitle').textContent = t.quran;
-            document.getElementById('homeTab').textContent = t.home;
-            document.getElementById('quranTab').textContent = t.fullQuran;
+            const homeTab = document.getElementById('homeTab');
+            if (homeTab) homeTab.textContent = t.home;
+            const quranTab = document.getElementById('quranTab');
+            if (quranTab) quranTab.textContent = t.fullQuran;
+            const recipesTab = document.getElementById('recipesTab');
+            if (recipesTab) recipesTab.textContent = t.recipes;
             const userAge = document.getElementById('userAge');
             if (userAge) userAge.placeholder = t.agePlaceholder;
             document.getElementById('sadaqahTitle').textContent = t.sadaqahTitle;
@@ -2409,6 +2413,13 @@
             }
         }
 
+        // Helper to convert numbers to Arabic-Indic numerals
+        function toArabicNumerals(num) {
+            if (currentLang !== 'ar') return num;
+            const numerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            return String(num).replace(/[0-9]/g, w => numerals[+w]);
+        }
+
         // Calculate current Ramadan day
         function getRamadanDay() {
             const today = new Date();
@@ -2460,15 +2471,15 @@
                 if (currentViewDay === null) currentViewDay = actualRamadanDay;
                 dayCard.innerHTML = `
                     <div class="day-label">${t.dayLabel}</div>
-                    <div class="day-number">${currentViewDay}</div>
+                    <div class="day-number">${toArabicNumerals(currentViewDay)}</div>
                     <div class="day-of-30">${t.dayOf30}</div>
                 `;
             } else {
-                currentViewDay = 1; // Default to day 1 for browsing
+                if (currentViewDay === null) currentViewDay = 1;
                 const daysUntil = getDaysUntilRamadan();
                 dayCard.innerHTML = `
                     <div class="not-ramadan">${t.notRamadan}</div>
-                    <div class="countdown">${daysUntil} ${t.days}</div>
+                    <div class="countdown">${toArabicNumerals(daysUntil)} ${t.days}</div>
                     <div class="day-of-30">${t.browseDuas}</div>
                 `;
             }
@@ -2510,7 +2521,7 @@
                 const slidesHtml = ALL_DUAS.map((dua, index) => `
                     <div class="dua-slide" id="dua-slide-${index + 1}">
                         <div class="dua-header">
-                            <span class="dua-title">✨ ${currentLang === 'ar' ? 'دعاء' : 'Supplication'} ${index + 1}</span>
+                            <span class="dua-title">✨ ${currentLang === 'ar' ? 'دعاء' : 'Supplication'} ${toArabicNumerals(index + 1)}</span>
                             <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
                                 <button class="lang-btn" onclick="showAllDuasModal()" style="font-size: 0.7rem; padding: 4px 8px;">
                                     ${t.browseAll}
@@ -2785,8 +2796,8 @@
 
             html += `</div>`;
             content.innerHTML = html;
-            overlay.style.display = 'flex';
-            setTimeout(() => overlay.classList.add('active'), 10);
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
         function jumpToDua(day) {
@@ -3160,9 +3171,9 @@
                 const mins = minutesUntil % 60;
 
                 if (hours > 0) {
-                    countdownEl.textContent = `${t.in} ${hours}${t.hours} ${mins}${t.minutes}`;
+                    countdownEl.textContent = `${t.in} ${toArabicNumerals(hours)}${t.hours} ${toArabicNumerals(mins)}${t.minutes}`;
                 } else {
-                    countdownEl.textContent = `${t.in} ${mins} ${t.minutesFull}`;
+                    countdownEl.textContent = `${t.in} ${toArabicNumerals(mins)} ${t.minutesFull}`;
                 }
 
                 // Highlight the next prayer item
